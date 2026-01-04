@@ -29,6 +29,15 @@ docs/
 # Playwright/Browser caches
 .playwright-mcp/
 
+# Reference repos (development only)
+reference_repos/
+
+# Test results
+test-results/
+
+# Firebase debug
+firebase-debug.log
+
 # Other
 *.md
 !README.md

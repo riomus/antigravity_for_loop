@@ -50,6 +50,53 @@
                 "command": "antigravity-for-loop.showLogs",
                 "title": "Antigravity: Show Loop Logs",
                 "icon": "$(output)"
+            },
+            {
+                "command": "antigravity-for-loop.toggleAutoAccept",
+                "title": "Antigravity: Toggle Auto-Accept",
+                "icon": "$(sync)"
+            },
+            {
+                "command": "antigravity-for-loop.runCheck",
+                "title": "Antigravity: Run Check Completion Script",
+                "icon": "$(run-all)"
+            },
+            {
+                "command": "antigravity-for-loop.toggleContinuation",
+                "title": "Antigravity: Toggle Continuation Enforcer",
+                "icon": "$(sync-ignored)"
+            },
+            {
+                "command": "antigravity-for-loop.copyPrompt",
+                "title": "Antigravity: Copy Continuation Prompt",
+                "icon": "$(clippy)"
+            },
+            {
+                "command": "antigravity-for-loop.debugCDP",
+                "title": "Antigravity: Debug CDP Connection",
+                "icon": "$(bug)"
+            },
+            {
+                "command": "antigravity-for-loop.enableCDP",
+                "title": "Antigravity: Enable CDP (Restart IDE)",
+                "icon": "$(refresh)"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "antigravity-for-loop.toggleAutoAccept",
+                "key": "ctrl+alt+shift+a",
+                "mac": "cmd+alt+shift+a"
+            },
+            {
+                "command": "antigravity-for-loop.showMenu",
+                "key": "ctrl+alt+shift+l",
+                "mac": "cmd+alt+shift+l"
+            },
+            {
+                "command": "antigravity-for-loop.copyPrompt",
+                "key": "ctrl+alt+shift+c",
+                "mac": "cmd+alt+shift+c"
             }
         ]
     },
@@ -61,6 +108,9 @@
         "test": "npm run test:shell && npm run test:unit",
         "package": "vsce package",
         "publish": "ovsx publish"
+    },
+    "dependencies": {
+        "ws": "^8.18.0"
     },
     "devDependencies": {
         "@mshanemc/vscode-test-playwright": "^0.0.1-beta14",

@@ -44,12 +44,12 @@ Describe 'for-loop.sh command'
             The output should include '最大迭代次數: 20'
         End
         
-        It '解析 --completion 參數'
+        It '解析 --test-command 參數'
             git() { echo "mocked"; }
-            
-            When run source ./commands/for-loop.sh "測試任務" --completion "ALL_DONE" --no-branch
+
+            When run source ./commands/for-loop.sh "測試任務" --test-command "pytest" --no-branch
             The status should be success
-            The output should include '完成標記: ALL_DONE'
+            The output should include '測試命令: pytest'
         End
     End
     
