@@ -3,7 +3,7 @@
     "displayName": "Antigravity For Loop",
     "description": "自動迭代修復循環插件：讓 AI 代理持續執行開發任務直到通過所有測試或達到迭代上限。",
     "version": "0.1.0",
-    "publisher": "antigravity-community",
+    "publisher": "iml1s",
     "license": "MIT",
     "repository": {
         "type": "git",
