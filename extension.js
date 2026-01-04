@@ -889,7 +889,7 @@ function detectAllCommands(workspacePath) {
 async function startLoop() {
     // Check if loop already running
     if (currentRalphLoop && currentRalphLoop.isRunning) {
-        vscode.window.showWarningMessage('已有迴圈正在執行。請先取消再開始新的。');
+        vscode.window.showWarningMessage('A loop is already running. Cancel it first to start a new one.');
         return;
     }
 
@@ -904,8 +904,8 @@ async function startLoop() {
 
     // Step 1: Task description
     const taskDescription = await vscode.window.showInputBox({
-        prompt: '📝 描述你的任務',
-        placeHolder: '例如：修復所有 TypeScript 錯誤',
+        prompt: 'Describe your task',
+        placeHolder: 'e.g., Fix all TypeScript errors',
         ignoreFocusOut: true
     });
 
@@ -914,38 +914,38 @@ async function startLoop() {
     // Step 2: Completion condition (Quick Pick)
     const completionOptions = [
         {
-            label: '$(check) 測試通過',
+            label: '$(check) Tests Pass',
             description: detectedCmd
                 ? `${detectedCmd.lang}: ${detectedCmd.cmd}`
-                : '未偵測到測試命令',
+                : 'No test command detected',
             value: 'test',
             command: detectedCmd?.cmd || null,
-            detail: detectedCmd ? `偵測到 ${detectedCmd.lang} 專案` : undefined
+            detail: detectedCmd ? `Detected ${detectedCmd.lang} project` : undefined
         },
         {
-            label: '$(package) Build 成功',
+            label: '$(package) Build Succeeds',
             description: detectedCmd?.type?.includes('build')
                 ? detectedCmd.cmd
-                : '編譯/建置成功即停止',
+                : 'Stop when build completes successfully',
             value: 'build',
             command: detectedCmd?.cmd || 'make'
         },
         {
-            label: '$(eye) AI 自行判斷',
-            description: 'AI 輸出 "DONE" 時停止',
+            label: '$(eye) AI Self-Judgment',
+            description: 'Stop when AI outputs "DONE"',
             value: 'ai',
             command: null
         },
         {
-            label: '$(terminal) 自訂命令...',
-            description: '輸入自訂的驗證命令',
+            label: '$(terminal) Custom Command...',
+            description: 'Enter a custom validation command',
             value: 'custom',
             command: null
         }
     ];
 
     const completionChoice = await vscode.window.showQuickPick(completionOptions, {
-        placeHolder: '⏹️ 選擇完成條件（什麼時候停止迴圈？）',
+        placeHolder: 'Select completion condition (when to stop the loop)',
         ignoreFocusOut: true
     });
 
@@ -956,8 +956,8 @@ async function startLoop() {
     // If custom, ask for command
     if (completionChoice.value === 'custom') {
         checkCommand = await vscode.window.showInputBox({
-            prompt: '輸入驗證命令（成功時 exit 0）',
-            placeHolder: '例如：npm test, cargo test, pytest, make test',
+            prompt: 'Enter validation command (exit 0 on success)',
+            placeHolder: 'e.g., npm test, cargo test, pytest, make test',
             ignoreFocusOut: true
         });
         if (!checkCommand) return;
@@ -966,8 +966,8 @@ async function startLoop() {
     // If test mode but no command detected, ask for it
     if (completionChoice.value === 'test' && !checkCommand) {
         checkCommand = await vscode.window.showInputBox({
-            prompt: '未偵測到測試命令，請手動輸入',
-            placeHolder: '例如：npm test, cargo test, pytest, make test',
+            prompt: 'No test command detected. Please enter manually',
+            placeHolder: 'e.g., npm test, cargo test, pytest, make test',
             ignoreFocusOut: true
         });
         if (!checkCommand) return;
@@ -975,13 +975,13 @@ async function startLoop() {
 
     // Step 3: Max iterations (with sensible default)
     const maxChoice = await vscode.window.showQuickPick([
-        { label: '5 次', value: '5', description: '快速嘗試' },
-        { label: '10 次', value: '10', description: '推薦' },
-        { label: '20 次', value: '20', description: '複雜任務' },
-        { label: '50 次', value: '50', description: '困難任務' },
-        { label: '自訂...', value: 'custom' }
+        { label: '5 iterations', value: '5', description: 'Quick try' },
+        { label: '10 iterations', value: '10', description: 'Recommended' },
+        { label: '20 iterations', value: '20', description: 'Complex task' },
+        { label: '50 iterations', value: '50', description: 'Difficult task' },
+        { label: 'Custom...', value: 'custom' }
     ], {
-        placeHolder: '🔄 最大迭代次數',
+        placeHolder: 'Maximum iterations',
         ignoreFocusOut: true
     });
 
@@ -990,11 +990,11 @@ async function startLoop() {
     let maxIterations = parseInt(maxChoice.value);
     if (maxChoice.value === 'custom') {
         const customMax = await vscode.window.showInputBox({
-            prompt: '輸入最大迭代次數 (1-100)',
+            prompt: 'Enter max iterations (1-100)',
             value: '10',
             validateInput: (v) => {
                 const n = parseInt(v);
-                return (isNaN(n) || n < 1 || n > 100) ? '請輸入 1-100 的數字' : null;
+                return (isNaN(n) || n < 1 || n > 100) ? 'Please enter a number between 1-100' : null;
             }
         });
         if (!customMax) return;
@@ -1031,9 +1031,9 @@ async function startLoop() {
 
             // Show notification
             if (result.success) {
-                vscode.window.showInformationMessage(`✅ 迴圈完成！${result.message}`);
+                vscode.window.showInformationMessage(`✅ Loop complete! ${result.message}`);
             } else {
-                vscode.window.showWarningMessage(`❌ 迴圈結束：${result.message}`);
+                vscode.window.showWarningMessage(`❌ Loop ended: ${result.message}`);
             }
         }
     });
@@ -1047,10 +1047,10 @@ async function startLoop() {
     updateStatusBar();
 
     // Start the loop (async)
-    vscode.window.showInformationMessage(`🚀 Ralph Loop 已啟動！任務：${taskDescription}`);
+    vscode.window.showInformationMessage(`🚀 Ralph Loop started! Task: ${taskDescription}`);
     currentRalphLoop.start().catch(e => {
         outputChannel.appendLine(`[Error] Loop failed: ${e.message}`);
-        vscode.window.showErrorMessage(`迴圈執行失敗：${e.message}`);
+        vscode.window.showErrorMessage(`Loop execution failed: ${e.message}`);
     });
 }
 
@@ -1059,25 +1059,25 @@ async function startLoop() {
  */
 async function cancelLoop() {
     if (!currentRalphLoop || !currentRalphLoop.isRunning) {
-        vscode.window.showInformationMessage('沒有正在執行的迴圈。');
+        vscode.window.showInformationMessage('No loop is currently running.');
         return;
     }
 
     const confirm = await vscode.window.showWarningMessage(
-        '確定要取消目前的迴圈嗎？',
+        'Are you sure you want to cancel the current loop?',
         { modal: true },
-        '是，取消'
+        'Yes, Cancel'
     );
 
-    if (confirm !== '是，取消') return;
+    if (confirm !== 'Yes, Cancel') return;
 
-    outputChannel.appendLine('[Cancel] 正在停止迴圈...');
+    outputChannel.appendLine('[Cancel] Stopping loop...');
     currentRalphLoop.cancel();
 
     currentState = { status: 'cancelled' };
     updateStatusBar();
 
-    vscode.window.showInformationMessage('迴圈已取消。');
+    vscode.window.showInformationMessage('Loop cancelled.');
 }
 
 /**
