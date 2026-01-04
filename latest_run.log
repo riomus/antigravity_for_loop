@@ -1,0 +1,511 @@
+test	Set up job	﻿2026-01-04T20:06:14.1359351Z Current runner version: '2.330.0'
+test	Set up job	2026-01-04T20:06:14.1394737Z ##[group]Runner Image Provisioner
+test	Set up job	2026-01-04T20:06:14.1396106Z Hosted Compute Agent
+test	Set up job	2026-01-04T20:06:14.1397102Z Version: 20251211.462
+test	Set up job	2026-01-04T20:06:14.1398055Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+test	Set up job	2026-01-04T20:06:14.1399173Z Build Date: 2025-12-11T16:28:49Z
+test	Set up job	2026-01-04T20:06:14.1400500Z Worker ID: {5807b9ff-793c-4fc2-a00b-be8e07d86385}
+test	Set up job	2026-01-04T20:06:14.1401702Z ##[endgroup]
+test	Set up job	2026-01-04T20:06:14.1402474Z ##[group]Operating System
+test	Set up job	2026-01-04T20:06:14.1403417Z Ubuntu
+test	Set up job	2026-01-04T20:06:14.1404186Z 24.04.3
+test	Set up job	2026-01-04T20:06:14.1404852Z LTS
+test	Set up job	2026-01-04T20:06:14.1405700Z ##[endgroup]
+test	Set up job	2026-01-04T20:06:14.1406441Z ##[group]Runner Image
+test	Set up job	2026-01-04T20:06:14.1407293Z Image: ubuntu-24.04
+test	Set up job	2026-01-04T20:06:14.1408176Z Version: 20251215.174.1
+test	Set up job	2026-01-04T20:06:14.1410116Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+test	Set up job	2026-01-04T20:06:14.1412505Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+test	Set up job	2026-01-04T20:06:14.1414744Z ##[endgroup]
+test	Set up job	2026-01-04T20:06:14.1416762Z ##[group]GITHUB_TOKEN Permissions
+test	Set up job	2026-01-04T20:06:14.1419284Z Contents: read
+test	Set up job	2026-01-04T20:06:14.1420477Z Metadata: read
+test	Set up job	2026-01-04T20:06:14.1421397Z Packages: read
+test	Set up job	2026-01-04T20:06:14.1422195Z ##[endgroup]
+test	Set up job	2026-01-04T20:06:14.1425554Z Secret source: Actions
+test	Set up job	2026-01-04T20:06:14.1426650Z Prepare workflow directory
+test	Set up job	2026-01-04T20:06:14.1898887Z Prepare all required actions
+test	Set up job	2026-01-04T20:06:14.1954986Z Getting action download info
+test	Set up job	2026-01-04T20:06:14.4006080Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+test	Set up job	2026-01-04T20:06:14.4864538Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+test	Set up job	2026-01-04T20:06:14.6766648Z Complete job name: test
+test	Run actions/checkout@v4	﻿2026-01-04T20:06:14.7460911Z ##[group]Run actions/checkout@v4
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7461783Z with:
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7462203Z   repository: ImL1s/antigravity_for_loop
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7462899Z   token: ***
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7463269Z   ssh-strict: true
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7463652Z   ssh-user: git
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7464038Z   persist-credentials: true
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7464473Z   clean: true
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7464866Z   sparse-checkout-cone-mode: true
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7465341Z   fetch-depth: 1
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7465714Z   fetch-tags: false
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7466102Z   show-progress: true
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7466493Z   lfs: false
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7466847Z   submodules: false
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7467241Z   set-safe-directory: true
+test	Run actions/checkout@v4	2026-01-04T20:06:14.7467875Z ##[endgroup]
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8568173Z Syncing repository: ImL1s/antigravity_for_loop
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8570084Z ##[group]Getting Git version info
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8571434Z Working directory is '/home/runner/work/antigravity_for_loop/antigravity_for_loop'
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8573430Z [command]/usr/bin/git version
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8647446Z git version 2.52.0
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8675155Z ##[endgroup]
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8696757Z Temporarily overriding HOME='/home/runner/work/_temp/d442ea77-3f9c-49a2-af67-8d6f7def1fe7' before making global git config changes
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8698205Z Adding repository directory to the temporary git global config as a safe directory
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8702394Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/antigravity_for_loop/antigravity_for_loop
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8741658Z Deleting the contents of '/home/runner/work/antigravity_for_loop/antigravity_for_loop'
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8745032Z ##[group]Initializing the repository
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8749130Z [command]/usr/bin/git init /home/runner/work/antigravity_for_loop/antigravity_for_loop
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8873778Z hint: Using 'master' as the name for the initial branch. This default branch name
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8874953Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8875948Z hint: to use in all of your new repositories, which will suppress this warning,
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8876892Z hint: call:
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8877248Z hint:
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8877838Z hint: 	git config --global init.defaultBranch <name>
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8878741Z hint:
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8879347Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8880437Z hint: 'development'. The just-created branch can be renamed via this command:
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8881139Z hint:
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8881507Z hint: 	git branch -m <name>
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8881938Z hint:
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8882505Z hint: Disable this message with "git config set advice.defaultBranchName false"
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8883884Z Initialized empty Git repository in /home/runner/work/antigravity_for_loop/antigravity_for_loop/.git/
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8889870Z [command]/usr/bin/git remote add origin https://github.com/ImL1s/antigravity_for_loop
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8926467Z ##[endgroup]
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8927172Z ##[group]Disabling automatic garbage collection
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8930692Z [command]/usr/bin/git config --local gc.auto 0
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8958225Z ##[endgroup]
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8958890Z ##[group]Setting up auth
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8965464Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test	Run actions/checkout@v4	2026-01-04T20:06:14.8994871Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test	Run actions/checkout@v4	2026-01-04T20:06:14.9334203Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test	Run actions/checkout@v4	2026-01-04T20:06:14.9362585Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test	Run actions/checkout@v4	2026-01-04T20:06:14.9577742Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test	Run actions/checkout@v4	2026-01-04T20:06:14.9611109Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test	Run actions/checkout@v4	2026-01-04T20:06:14.9832333Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+test	Run actions/checkout@v4	2026-01-04T20:06:14.9865463Z ##[endgroup]
+test	Run actions/checkout@v4	2026-01-04T20:06:14.9866194Z ##[group]Fetching the repository
+test	Run actions/checkout@v4	2026-01-04T20:06:14.9874371Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +dc3c1bdf9e64f26774a32264d5c4162242e594dc:refs/remotes/origin/main
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2649361Z From https://github.com/ImL1s/antigravity_for_loop
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2650984Z  * [new ref]         dc3c1bdf9e64f26774a32264d5c4162242e594dc -> origin/main
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2684625Z ##[endgroup]
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2685398Z ##[group]Determining the checkout info
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2686899Z ##[endgroup]
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2692111Z [command]/usr/bin/git sparse-checkout disable
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2757779Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2784549Z ##[group]Checking out the ref
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2787996Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2990246Z Switched to a new branch 'main'
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2993003Z branch 'main' set up to track 'origin/main'.
+test	Run actions/checkout@v4	2026-01-04T20:06:15.2999335Z ##[endgroup]
+test	Run actions/checkout@v4	2026-01-04T20:06:15.3033222Z [command]/usr/bin/git log -1 --format=%H
+test	Run actions/checkout@v4	2026-01-04T20:06:15.3054898Z dc3c1bdf9e64f26774a32264d5c4162242e594dc
+test	Setup Node.js	﻿2026-01-04T20:06:15.3298195Z ##[group]Run actions/setup-node@v4
+test	Setup Node.js	2026-01-04T20:06:15.3298729Z with:
+test	Setup Node.js	2026-01-04T20:06:15.3299081Z   node-version: 20
+test	Setup Node.js	2026-01-04T20:06:15.3299459Z   always-auth: false
+test	Setup Node.js	2026-01-04T20:06:15.3299867Z   check-latest: false
+test	Setup Node.js	2026-01-04T20:06:15.3300673Z   token: ***
+test	Setup Node.js	2026-01-04T20:06:15.3301036Z ##[endgroup]
+test	Setup Node.js	2026-01-04T20:06:15.5070065Z Found in cache @ /opt/hostedtoolcache/node/20.19.6/x64
+test	Setup Node.js	2026-01-04T20:06:15.5076381Z ##[group]Environment details
+test	Setup Node.js	2026-01-04T20:06:15.8329119Z node: v20.19.6
+test	Setup Node.js	2026-01-04T20:06:15.8330419Z npm: 10.8.2
+test	Setup Node.js	2026-01-04T20:06:15.8330986Z yarn: 1.22.22
+test	Setup Node.js	2026-01-04T20:06:15.8332180Z ##[endgroup]
+test	Install Dependencies	﻿2026-01-04T20:06:15.8457042Z ##[group]Run npm ci
+test	Install Dependencies	2026-01-04T20:06:15.8458039Z [36;1mnpm ci[0m
+test	Install Dependencies	2026-01-04T20:06:15.8506233Z shell: /usr/bin/bash -e {0}
+test	Install Dependencies	2026-01-04T20:06:15.8507325Z ##[endgroup]
+test	Install Dependencies	2026-01-04T20:06:19.6536451Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+test	Install Dependencies	2026-01-04T20:06:20.1895984Z npm warn deprecated rimraf@2.7.1: Rimraf versions prior to v4 are no longer supported
+test	Install Dependencies	2026-01-04T20:06:20.7508600Z npm warn deprecated lodash.isequal@4.5.0: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
+test	Install Dependencies	2026-01-04T20:06:21.0755182Z npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+test	Install Dependencies	2026-01-04T20:06:21.3437145Z npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+test	Install Dependencies	2026-01-04T20:06:21.6509784Z npm warn deprecated fstream@1.0.12: This package is no longer supported.
+test	Install Dependencies	2026-01-04T20:06:23.0721655Z npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+test	Install Dependencies	2026-01-04T20:06:23.3347225Z npm warn deprecated glob@7.1.7: Glob versions prior to v9 are no longer supported
+test	Install Dependencies	2026-01-04T20:06:23.5918099Z npm warn deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+test	Install Dependencies	2026-01-04T20:06:31.5273047Z 
+test	Install Dependencies	2026-01-04T20:06:31.5273944Z added 970 packages, and audited 971 packages in 16s
+test	Install Dependencies	2026-01-04T20:06:31.5277609Z 
+test	Install Dependencies	2026-01-04T20:06:31.5278201Z 234 packages are looking for funding
+test	Install Dependencies	2026-01-04T20:06:31.5279443Z   run `npm fund` for details
+test	Install Dependencies	2026-01-04T20:06:31.5871786Z 
+test	Install Dependencies	2026-01-04T20:06:31.5872758Z 18 vulnerabilities (3 low, 15 high)
+test	Install Dependencies	2026-01-04T20:06:31.5873926Z 
+test	Install Dependencies	2026-01-04T20:06:31.5874492Z To address issues that do not require attention, run:
+test	Install Dependencies	2026-01-04T20:06:31.5875259Z   npm audit fix
+test	Install Dependencies	2026-01-04T20:06:31.5875468Z 
+test	Install Dependencies	2026-01-04T20:06:31.5875864Z To address all issues (including breaking changes), run:
+test	Install Dependencies	2026-01-04T20:06:31.5876499Z   npm audit fix --force
+test	Install Dependencies	2026-01-04T20:06:31.5876821Z 
+test	Install Dependencies	2026-01-04T20:06:31.5877064Z Run `npm audit` for details.
+test	Install ShellSpec	﻿2026-01-04T20:06:31.6225901Z ##[group]Run curl -fsSL https://git.io/shellspec | sh -s -- --yes
+test	Install ShellSpec	2026-01-04T20:06:31.6226458Z [36;1mcurl -fsSL https://git.io/shellspec | sh -s -- --yes[0m
+test	Install ShellSpec	2026-01-04T20:06:31.6226821Z [36;1mecho "$HOME/.local/bin" >> $GITHUB_PATH[0m
+test	Install ShellSpec	2026-01-04T20:06:31.6269172Z shell: /usr/bin/bash -e {0}
+test	Install ShellSpec	2026-01-04T20:06:31.6269454Z ##[endgroup]
+test	Install ShellSpec	2026-01-04T20:06:31.9649491Z Executable file        : /home/runner/.local/bin/shellspec
+test	Install ShellSpec	2026-01-04T20:06:31.9650629Z Installation directory : /home/runner/.local/lib/shellspec
+test	Install ShellSpec	2026-01-04T20:06:31.9651350Z Version (tag or commit): 0.28.1
+test	Install ShellSpec	2026-01-04T20:06:31.9652073Z [git] https://github.com/shellspec/shellspec.git
+test	Install ShellSpec	2026-01-04T20:06:31.9652486Z 
+test	Install ShellSpec	2026-01-04T20:06:31.9652767Z Do you want to continue? [y/N] y
+test	Install ShellSpec	2026-01-04T20:06:31.9747721Z hint: Using 'master' as the name for the initial branch. This default branch name
+test	Install ShellSpec	2026-01-04T20:06:31.9748928Z Initialized empty Git repository in /home/runner/.local/lib/shellspec/.git/
+test	Install ShellSpec	2026-01-04T20:06:31.9750242Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+test	Install ShellSpec	2026-01-04T20:06:31.9751422Z hint: to use in all of your new repositories, which will suppress this warning,
+test	Install ShellSpec	2026-01-04T20:06:31.9752175Z hint: call:
+test	Install ShellSpec	2026-01-04T20:06:31.9752564Z hint:
+test	Install ShellSpec	2026-01-04T20:06:31.9753241Z hint: 	git config --global init.defaultBranch <name>
+test	Install ShellSpec	2026-01-04T20:06:31.9753858Z hint:
+test	Install ShellSpec	2026-01-04T20:06:31.9754518Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+test	Install ShellSpec	2026-01-04T20:06:31.9755579Z hint: 'development'. The just-created branch can be renamed via this command:
+test	Install ShellSpec	2026-01-04T20:06:31.9756246Z hint:
+test	Install ShellSpec	2026-01-04T20:06:31.9756616Z hint: 	git branch -m <name>
+test	Install ShellSpec	2026-01-04T20:06:31.9757402Z hint:
+test	Install ShellSpec	2026-01-04T20:06:31.9757825Z hint: Disable this message with "git config set advice.defaultBranchName false"
+test	Install ShellSpec	2026-01-04T20:06:32.1658669Z From https://github.com/shellspec/shellspec
+test	Install ShellSpec	2026-01-04T20:06:32.1659172Z  * tag               0.28.1     -> FETCH_HEAD
+test	Install ShellSpec	2026-01-04T20:06:32.1984561Z Switched to a new branch '0.28.1'
+test	Install ShellSpec	2026-01-04T20:06:32.2011145Z Done
+test	Install jq	﻿2026-01-04T20:06:32.2042967Z ##[group]Run sudo apt-get install -y jq
+test	Install jq	2026-01-04T20:06:32.2043300Z [36;1msudo apt-get install -y jq[0m
+test	Install jq	2026-01-04T20:06:32.2076406Z shell: /usr/bin/bash -e {0}
+test	Install jq	2026-01-04T20:06:32.2076659Z ##[endgroup]
+test	Install jq	2026-01-04T20:06:33.1691866Z Reading package lists...
+test	Install jq	2026-01-04T20:06:33.3638303Z Building dependency tree...
+test	Install jq	2026-01-04T20:06:33.3649341Z Reading state information...
+test	Install jq	2026-01-04T20:06:33.5373314Z jq is already the newest version (1.7.1-3ubuntu0.24.04.1).
+test	Install jq	2026-01-04T20:06:33.5374244Z 0 upgraded, 0 newly installed, 0 to remove and 42 not upgraded.
+test	Run Shell Tests	﻿2026-01-04T20:06:33.5427496Z ##[group]Run shellspec --shell bash --no-warning
+test	Run Shell Tests	2026-01-04T20:06:33.5427870Z [36;1mshellspec --shell bash --no-warning[0m
+test	Run Shell Tests	2026-01-04T20:06:33.5460510Z shell: /usr/bin/bash -e {0}
+test	Run Shell Tests	2026-01-04T20:06:33.5460744Z ##[endgroup]
+test	Run Shell Tests	2026-01-04T20:06:33.7909708Z Running: /usr/bin/bash [bash 5.2.21(1)-release]
+test	Run Shell Tests	2026-01-04T20:06:34.2525177Z ............
+test	Run Shell Tests	2026-01-04T20:06:34.2525497Z 
+test	Run Shell Tests	2026-01-04T20:06:34.2527872Z Finished in 0.53 seconds (user 0.38 seconds, sys 0.27 seconds)
+test	Run Shell Tests	2026-01-04T20:06:34.2528693Z 12 examples, 0 failures
+test	Run Shell Tests	2026-01-04T20:06:34.2528850Z 
+test	Run Unit Tests	﻿2026-01-04T20:06:34.2615975Z ##[group]Run npm run test:unit
+test	Run Unit Tests	2026-01-04T20:06:34.2616256Z [36;1mnpm run test:unit[0m
+test	Run Unit Tests	2026-01-04T20:06:34.2649765Z shell: /usr/bin/bash -e {0}
+test	Run Unit Tests	2026-01-04T20:06:34.2650191Z ##[endgroup]
+test	Run Unit Tests	2026-01-04T20:06:34.3820124Z 
+test	Run Unit Tests	2026-01-04T20:06:34.3820591Z > antigravity-for-loop@0.2.0 test:unit
+test	Run Unit Tests	2026-01-04T20:06:34.3821349Z > mocha test/unit/**/*.test.js --timeout 10000
+test	Run Unit Tests	2026-01-04T20:06:34.3821729Z 
+test	Run Unit Tests	2026-01-04T20:06:34.5359313Z 
+test	Run Unit Tests	2026-01-04T20:06:34.5365446Z 
+test	Run Unit Tests	2026-01-04T20:06:34.5372392Z   CDPManager
+test	Run Unit Tests	2026-01-04T20:06:34.5373315Z     Constructor
+test	Run Unit Tests	2026-01-04T20:06:34.5389334Z       ✔ should initialize with default values
+test	Run Unit Tests	2026-01-04T20:06:34.5395161Z       ✔ should accept custom logger
+test	Run Unit Tests	2026-01-04T20:06:34.5398292Z       ✔ should use console as default logger
+test	Run Unit Tests	2026-01-04T20:06:34.5401674Z     checkPort
+test	Run Unit Tests	2026-01-04T20:06:34.5457370Z       ✔ should return false for unavailable port
+test	Run Unit Tests	2026-01-04T20:06:34.5472986Z       ✔ should timeout gracefully
+test	Run Unit Tests	2026-01-04T20:06:34.5475923Z     findAvailableCDPPort
+test	Run Unit Tests	2026-01-04T20:06:34.5490489Z       ✔ should return null when no port is available
+test	Run Unit Tests	2026-01-04T20:06:34.5492632Z     dispose
+test	Run Unit Tests	2026-01-04T20:06:34.5496066Z       ✔ should reset all state
+test	Run Unit Tests	2026-01-04T20:06:34.5499860Z       ✔ should terminate existing socket
+test	Run Unit Tests	2026-01-04T20:06:34.5502705Z     isAvailable
+test	Run Unit Tests	2026-01-04T20:06:34.5519538Z       ✔ should check if CDP port is available
+test	Run Unit Tests	2026-01-04T20:06:34.5521904Z     sendCommand
+test	Run Unit Tests	2026-01-04T20:06:34.5527400Z       ✔ should reject if socket not open
+test	Run Unit Tests	2026-01-04T20:06:34.5530760Z       ✔ should increment message ID for each command
+test	Run Unit Tests	2026-01-04T20:06:34.5532011Z     injectPrompt
+test	Run Unit Tests	2026-01-04T20:06:34.5537151Z       ✔ should escape special characters in text
+test	Run Unit Tests	2026-01-04T20:06:34.5549515Z       ✔ should try to connect if not active
+test	Run Unit Tests	2026-01-04T20:06:34.5551816Z     debugListInputs
+test	Run Unit Tests	2026-01-04T20:06:34.5568964Z       ✔ should try to connect if not active
+test	Run Unit Tests	2026-01-04T20:06:34.5571398Z     clickAcceptButtons
+test	Run Unit Tests	2026-01-04T20:06:34.5586592Z       ✔ should return 0 clicks if not connected
+test	Run Unit Tests	2026-01-04T20:06:34.5588578Z     debugListButtons
+test	Run Unit Tests	2026-01-04T20:06:34.5602903Z       ✔ should try to connect if not active
+test	Run Unit Tests	2026-01-04T20:06:34.5605047Z     Logging
+test	Run Unit Tests	2026-01-04T20:06:34.5616756Z       ✔ should log connection attempts
+test	Run Unit Tests	2026-01-04T20:06:34.5618428Z 
+test	Run Unit Tests	2026-01-04T20:06:34.5619512Z   CDPManager Helper Script
+test	Run Unit Tests	2026-01-04T20:06:34.5620560Z     injectHelperScript content
+test	Run Unit Tests	2026-01-04T20:06:34.5623871Z       ✔ should include all required functions
+test	Run Unit Tests	2026-01-04T20:06:34.5625934Z       ✔ should check for antigravity.agentPanel iframe
+test	Run Unit Tests	2026-01-04T20:06:34.5627544Z       ✔ should look for Lexical editor
+test	Run Unit Tests	2026-01-04T20:06:34.5629551Z       ✔ should use execCommand for text insertion
+test	Run Unit Tests	2026-01-04T20:06:34.5630132Z 
+test	Run Unit Tests	2026-01-04T20:06:34.5631069Z   CDPManager Accept Button Detection
+test	Run Unit Tests	2026-01-04T20:06:34.5631714Z     Accept button patterns
+test	Run Unit Tests	2026-01-04T20:06:34.5634002Z       ✔ should have correct accept selectors
+test	Run Unit Tests	2026-01-04T20:06:34.5636057Z       ✔ should have accept text patterns
+test	Run Unit Tests	2026-01-04T20:06:34.5637880Z       ✔ should have deny text patterns to avoid
+test	Run Unit Tests	2026-01-04T20:06:34.5638367Z 
+test	Run Unit Tests	2026-01-04T20:06:34.5639049Z   CDPManager Port Handling
+test	Run Unit Tests	2026-01-04T20:06:34.5641308Z     ✔ should check ports 9000-9003
+test	Run Unit Tests	2026-01-04T20:06:34.5643744Z     ✔ should scan ports in order
+test	Run Unit Tests	2026-01-04T20:06:34.5644082Z 
+test	Run Unit Tests	2026-01-04T20:06:34.5644799Z   CDPManager WebSocket Handling
+test	Run Unit Tests	2026-01-04T20:06:34.5647211Z     ✔ should set connector active on successful connection
+test	Run Unit Tests	2026-01-04T20:06:34.5648810Z     ✔ should reset state on WebSocket close
+test	Run Unit Tests	2026-01-04T20:06:34.5649146Z 
+test	Run Unit Tests	2026-01-04T20:06:34.5649809Z   CDPManager Integration Scenarios
+test	Run Unit Tests	2026-01-04T20:06:34.5652319Z     ✔ should handle full connect-inject-click flow conceptually
+test	Run Unit Tests	2026-01-04T20:06:34.5652741Z 
+test	Run Unit Tests	2026-01-04T20:06:34.5653414Z   detectTestCommand
+test	Run Unit Tests	2026-01-04T20:06:34.5654209Z     Core Languages
+test	Run Unit Tests	2026-01-04T20:06:34.5666272Z       ✔ should detect npm test
+test	Run Unit Tests	2026-01-04T20:06:34.5679351Z       ✔ should detect pytest
+test	Run Unit Tests	2026-01-04T20:06:34.5686214Z       ✔ should detect cargo test
+test	Run Unit Tests	2026-01-04T20:06:34.5692388Z       ✔ should detect go test
+test	Run Unit Tests	2026-01-04T20:06:34.5698250Z       ✔ should detect mvn test
+test	Run Unit Tests	2026-01-04T20:06:34.5704820Z       ✔ should detect dotnet test
+test	Run Unit Tests	2026-01-04T20:06:34.5708420Z     Priority Logic
+test	Run Unit Tests	2026-01-04T20:06:34.5713714Z       ✔ should prefer npm test over Makefile
+test	Run Unit Tests	2026-01-04T20:06:34.5723240Z       ✔ should use Makefile as fallback
+test	Run Unit Tests	2026-01-04T20:06:34.5726454Z     Edge Cases
+test	Run Unit Tests	2026-01-04T20:06:34.5730687Z       ✔ should return null for empty directory
+test	Run Unit Tests	2026-01-04T20:06:34.5736208Z       ✔ should skip default npm test placeholder
+test	Run Unit Tests	2026-01-04T20:06:34.5742984Z       ✔ should handle malformed JSON
+test	Run Unit Tests	2026-01-04T20:06:34.5745854Z 
+test	Run Unit Tests	2026-01-04T20:06:34.5747601Z   RalphLoop
+test	Run Unit Tests	2026-01-04T20:06:34.5748136Z     Constructor
+test	Run Unit Tests	2026-01-04T20:06:34.5752220Z       ✔ should initialize with default options
+test	Run Unit Tests	2026-01-04T20:06:34.5755003Z       ✔ should accept custom options
+test	Run Unit Tests	2026-01-04T20:06:34.5757281Z       ✔ should not be running initially
+test	Run Unit Tests	2026-01-04T20:06:34.5758676Z     buildPrompt
+test	Run Unit Tests	2026-01-04T20:06:34.5762177Z       ✔ should include iteration info
+test	Run Unit Tests	2026-01-04T20:06:34.5764935Z       ✔ should include task description
+test	Run Unit Tests	2026-01-04T20:06:34.5767539Z       ✔ should include test command in instructions
+test	Run Unit Tests	2026-01-04T20:06:34.5770402Z       ✔ should include previous error on subsequent iterations
+test	Run Unit Tests	2026-01-04T20:06:34.5773072Z       ✔ should not include previous error on first iteration
+test	Run Unit Tests	2026-01-04T20:06:34.5776412Z       ✔ should include completion promise
+test	Run Unit Tests	2026-01-04T20:06:34.5779369Z       ✔ should truncate long error messages
+test	Run Unit Tests	2026-01-04T20:06:34.5780607Z     runTestCommand
+test	Run Unit Tests	2026-01-04T20:06:34.5784319Z       ✔ should return success when no test command
+test	Run Unit Tests	2026-01-04T20:06:34.5848492Z       ✔ should execute test command
+test	Run Unit Tests	2026-01-04T20:06:34.5873357Z       ✔ should handle failing test command
+test	Run Unit Tests	2026-01-04T20:06:34.5894742Z       ✔ should log output to channel
+test	Run Unit Tests	2026-01-04T20:06:34.5895990Z     getStatus
+test	Run Unit Tests	2026-01-04T20:06:34.5899261Z       ✔ should return current status
+test	Run Unit Tests	2026-01-04T20:06:34.5901597Z     cancel
+test	Run Unit Tests	2026-01-04T20:06:34.5904001Z       ✔ should stop the loop
+test	Run Unit Tests	2026-01-04T20:06:34.5906554Z       ✔ should log cancellation message
+test	Run Unit Tests	2026-01-04T20:06:34.5907536Z     complete
+test	Run Unit Tests	2026-01-04T20:06:34.5910820Z       ✔ should mark loop as not running
+test	Run Unit Tests	2026-01-04T20:06:34.5913662Z       ✔ should return result object
+test	Run Unit Tests	2026-01-04T20:06:34.6020478Z       ✔ should call onComplete callback
+test	Run Unit Tests	2026-01-04T20:06:34.6023346Z       ✔ should log success message
+test	Run Unit Tests	2026-01-04T20:06:34.6025846Z       ✔ should log failure message
+test	Run Unit Tests	2026-01-04T20:06:34.6026820Z     startAutoAccept
+test	Run Unit Tests	2026-01-04T20:06:34.6030633Z       ✔ should start auto-accept interval
+test	Run Unit Tests	2026-01-04T20:06:34.6033461Z       ✔ should not start multiple intervals
+test	Run Unit Tests	2026-01-04T20:06:34.6034423Z     stopAutoAccept
+test	Run Unit Tests	2026-01-04T20:06:34.6037096Z       ✔ should stop auto-accept interval
+test	Run Unit Tests	2026-01-04T20:06:34.6039502Z       ✔ should handle being called when not started
+test	Run Unit Tests	2026-01-04T20:06:34.6040682Z     start (integration)
+test	Run Unit Tests	2026-01-04T20:06:34.6045086Z       ✔ should fail if already running
+test	Run Unit Tests	2026-01-04T20:06:34.6048705Z       ✔ should fail if CDP connection fails
+test	Run Unit Tests	2026-01-04T20:06:34.6379713Z       ✔ should inject prompt on each iteration
+test	Run Unit Tests	2026-01-04T20:06:34.6709563Z       ✔ should complete when test passes
+test	Run Unit Tests	2026-01-04T20:06:36.7374093Z       ✔ should reach max iterations when tests keep failing (2065ms)
+test	Run Unit Tests	2026-01-04T20:06:36.7377832Z       - should complete when AI signals DONE
+test	Run Unit Tests	2026-01-04T20:06:36.7712057Z       ✔ should call onProgress callback
+test	Run Unit Tests	2026-01-04T20:06:40.7736412Z       ✔ should handle injection failure gracefully (4002ms)
+test	Run Unit Tests	2026-01-04T20:06:40.7737277Z     sleep helper
+test	Run Unit Tests	2026-01-04T20:06:40.8234492Z       ✔ should delay for specified time (50ms)
+test	Run Unit Tests	2026-01-04T20:06:40.8235004Z 
+test	Run Unit Tests	2026-01-04T20:06:40.8236008Z   RalphLoop Error Handling
+test	Run Unit Tests	2026-01-04T20:06:42.8903134Z     ✔ should store last error from failed tests (2066ms)
+test	Run Unit Tests	2026-01-04T20:06:42.8908418Z     ✔ should include error in next iteration prompt
+test	Run Unit Tests	2026-01-04T20:06:42.8908961Z 
+test	Run Unit Tests	2026-01-04T20:06:42.8909133Z   Unit Tests - State Parser
+test	Run Unit Tests	2026-01-04T20:06:42.8913520Z     ✔ parseState should parse valid JSON
+test	Run Unit Tests	2026-01-04T20:06:42.8915459Z     ✔ parseState should return null for invalid JSON
+test	Run Unit Tests	2026-01-04T20:06:42.8916892Z     ✔ parseState should handle empty string
+test	Run Unit Tests	2026-01-04T20:06:42.8917269Z 
+test	Run Unit Tests	2026-01-04T20:06:42.8918141Z   Unit Tests - Status Bar Text
+test	Run Unit Tests	2026-01-04T20:06:42.8920758Z     ✔ should show Off when no state
+test	Run Unit Tests	2026-01-04T20:06:42.8922203Z     ✔ should show progress when running
+test	Run Unit Tests	2026-01-04T20:06:42.8923769Z     ✔ should show Done when completed
+test	Run Unit Tests	2026-01-04T20:06:42.8925259Z     ✔ should show Failed when failed
+test	Run Unit Tests	2026-01-04T20:06:42.8926838Z     ✔ should show Stuck when stuck
+test	Run Unit Tests	2026-01-04T20:06:42.8927174Z 
+test	Run Unit Tests	2026-01-04T20:06:42.8927991Z   Unit Tests - Loop Continuation Logic
+test	Run Unit Tests	2026-01-04T20:06:42.8930342Z     ✔ should not continue when no state
+test	Run Unit Tests	2026-01-04T20:06:42.8931956Z     ✔ should continue when running and under max
+test	Run Unit Tests	2026-01-04T20:06:42.8933462Z     ✔ should not continue when at max iterations
+test	Run Unit Tests	2026-01-04T20:06:42.8934888Z     ✔ should not continue when completed
+test	Run Unit Tests	2026-01-04T20:06:42.8936444Z     ✔ should not continue when failed
+test	Run Unit Tests	2026-01-04T20:06:42.8937959Z     ✔ should not continue when stuck
+test	Run Unit Tests	2026-01-04T20:06:42.8938330Z 
+test	Run Unit Tests	2026-01-04T20:06:42.8940857Z 
+test	Run Unit Tests	2026-01-04T20:06:42.8941633Z   90 passing (8s)
+test	Run Unit Tests	2026-01-04T20:06:42.8941974Z   1 pending
+test	Run Unit Tests	2026-01-04T20:06:42.8942125Z 
+test	Run Integration Tests	﻿2026-01-04T20:06:42.9070859Z ##[group]Run xvfb-run -a npm run test:integration
+test	Run Integration Tests	2026-01-04T20:06:42.9071229Z [36;1mxvfb-run -a npm run test:integration[0m
+test	Run Integration Tests	2026-01-04T20:06:42.9103360Z shell: /usr/bin/bash -e {0}
+test	Run Integration Tests	2026-01-04T20:06:42.9103593Z ##[endgroup]
+test	Run Integration Tests	2026-01-04T20:06:43.4965627Z 
+test	Run Integration Tests	2026-01-04T20:06:43.4966267Z > antigravity-for-loop@0.2.0 test:integration
+test	Run Integration Tests	2026-01-04T20:06:43.4966875Z > npx @vscode/test-cli
+test	Run Integration Tests	2026-01-04T20:06:43.4967122Z 
+test	Run Integration Tests	2026-01-04T20:06:44.2603505Z - Resolving version...
+test	Run Integration Tests	2026-01-04T20:06:44.4002043Z ✔ Validated version: 1.107.1
+test	Run Integration Tests	2026-01-04T20:06:44.4018728Z - Found at https://update.code.visualstudio.com/1.107.1/linux-x64/stable?released=true
+test	Run Integration Tests	2026-01-04T20:06:44.5661151Z ✔ Found at https://update.code.visualstudio.com/1.107.1/linux-x64/stable?released=true
+test	Run Integration Tests	2026-01-04T20:06:44.5663832Z - Downloading (155.59 MB)
+test	Run Integration Tests	2026-01-04T20:06:48.0279728Z ✔ Downloaded VS Code into /home/runner/work/antigravity_for_loop/antigravity_for_loop/.vscode-test/vscode-linux-x64-1.107.1
+test	Run Integration Tests	2026-01-04T20:06:51.4016021Z [2695:0104/200651.400950:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:51.4103743Z [2695:0104/200651.409978:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+test	Run Integration Tests	2026-01-04T20:06:51.4111703Z [2695:0104/200651.410742:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:51.4115805Z [2695:0104/200651.410764:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:51.4118136Z [2695:0104/200651.410774:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:51.4120614Z [2695:0104/200651.410785:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:51.4122834Z [2695:0104/200651.410793:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+test	Run Integration Tests	2026-01-04T20:06:51.6228132Z [90m[main 2026-01-04T20:06:51.620Z][0m update#setState disabled
+test	Run Integration Tests	2026-01-04T20:06:51.6229460Z [90m[main 2026-01-04T20:06:51.621Z][0m update#ctor - updates are disabled by the environment
+test	Run Integration Tests	2026-01-04T20:06:51.6231506Z [2695:0104/200651.622458:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:52.6551428Z [2718:0104/200652.654723:ERROR:components/viz/service/main/viz_main_impl.cc:189] Exiting GPU process due to errors during initialization
+test	Run Integration Tests	2026-01-04T20:06:53.0292534Z workbench#open()
+test	Run Integration Tests	2026-01-04T20:06:53.3779487Z ChatSessionStore: Migrating 0 chat sessions from storage service to file system
+test	Run Integration Tests	2026-01-04T20:06:53.6385986Z Started local extension host with pid 2938.
+test	Run Integration Tests	2026-01-04T20:06:53.6389107Z IExtensionHostStarter.start() took 29 ms.
+test	Run Integration Tests	2026-01-04T20:06:53.7726080Z Started initializing default profile extensions in extensions installation folder. file:///home/runner/work/antigravity_for_loop/antigravity_for_loop/.vscode-test/extensions
+test	Run Integration Tests	2026-01-04T20:06:54.2504713Z Completed initializing default profile extensions in extensions installation folder. file:///home/runner/work/antigravity_for_loop/antigravity_for_loop/.vscode-test/extensions
+test	Run Integration Tests	2026-01-04T20:06:54.3914269Z MCP Registry configured: https://api.mcp.github.com
+test	Run Integration Tests	2026-01-04T20:06:54.4101152Z Loading development extension at /home/runner/work/antigravity_for_loop/antigravity_for_loop
+test	Run Integration Tests	2026-01-04T20:06:54.6643419Z NativeExtensionHostFactory._createLocalProcessExtensionHostDataProvider.scannedExtensions: vscode.bat,vscode.clojure,vscode.coffeescript,vscode.configuration-editing,vscode.cpp,vscode.csharp,vscode.css,vscode.css-language-features,vscode.dart,vscode.debug-auto-launch,vscode.debug-server-ready,vscode.diff,vscode.docker,vscode.dotenv,vscode.emmet,vscode.extension-editing,vscode.fsharp,vscode.git,vscode.git-base,vscode.github,vscode.github-authentication,vscode.go,vscode.groovy,vscode.grunt,vscode.gulp,vscode.handlebars,vscode.hlsl,vscode.html,vscode.html-language-features,vscode.ini,vscode.ipynb,vscode.jake,vscode.java,vscode.javascript,vscode.json,vscode.json-language-features,vscode.julia,vscode.latex,vscode.less,vscode.log,vscode.lua,vscode.make,vscode.markdown,vscode.markdown-language-features,vscode.markdown-math,vscode.media-preview,vscode.merge-conflict,vscode.mermaid-chat-features,vscode.microsoft-authentication,ms-vscode.js-debug,ms-vscode.js-debug-companion,ms-vscode.vscode-js-profile-table,vscode.builtin-notebook-renderers,vscode.npm,vscode.objective-c,vscode.perl,vscode.php,vscode.php-language-features,vscode.powershell,vscode.prompt,vscode.pug,vscode.python,vscode.r,vscode.razor,vscode.references-view,vscode.restructuredtext,vscode.ruby,vscode.rust,vscode.scss,vscode.search-result,vscode.shaderlab,vscode.shellscript,vscode.simple-browser,vscode.sql,vscode.swift,vscode.terminal-suggest,vscode.theme-abyss,vscode.theme-defaults,vscode.theme-kimbie-dark,vscode.theme-monokai,vscode.theme-monokai-dimmed,vscode.theme-quietlight,vscode.theme-red,vscode.vscode-theme-seti,vscode.theme-solarized-dark,vscode.theme-solarized-light,vscode.theme-tomorrow-night-blue,vscode.tunnel-forwarding,vscode.typescript,vscode.typescript-language-features,vscode.vb,vscode.xml,vscode.yaml,iml1s.antigravity-for-loop
+test	Run Integration Tests	2026-01-04T20:06:54.6765103Z NativeExtensionHostFactory._createLocalProcessExtensionHostDataProvider.localExtensions: iml1s.antigravity-for-loop,vscode.bat,vscode.clojure,vscode.coffeescript,vscode.configuration-editing,vscode.cpp,vscode.csharp,vscode.css,vscode.css-language-features,vscode.dart,vscode.debug-auto-launch,vscode.debug-server-ready,vscode.diff,vscode.docker,vscode.dotenv,vscode.emmet,vscode.extension-editing,vscode.fsharp,vscode.git,vscode.git-base,vscode.github,vscode.github-authentication,vscode.go,vscode.groovy,vscode.grunt,vscode.gulp,vscode.handlebars,vscode.hlsl,vscode.html,vscode.html-language-features,vscode.ini,vscode.ipynb,vscode.jake,vscode.java,vscode.javascript,vscode.json,vscode.json-language-features,vscode.julia,vscode.latex,vscode.less,vscode.log,vscode.lua,vscode.make,vscode.markdown,vscode.markdown-language-features,vscode.markdown-math,vscode.media-preview,vscode.merge-conflict,vscode.mermaid-chat-features,vscode.microsoft-authentication,ms-vscode.js-debug,ms-vscode.js-debug-companion,ms-vscode.vscode-js-profile-table,vscode.builtin-notebook-renderers,vscode.npm,vscode.objective-c,vscode.perl,vscode.php,vscode.php-language-features,vscode.powershell,vscode.prompt,vscode.pug,vscode.python,vscode.r,vscode.razor,vscode.references-view,vscode.restructuredtext,vscode.ruby,vscode.rust,vscode.scss,vscode.search-result,vscode.shaderlab,vscode.shellscript,vscode.simple-browser,vscode.sql,vscode.swift,vscode.terminal-suggest,vscode.theme-abyss,vscode.theme-defaults,vscode.theme-kimbie-dark,vscode.theme-monokai,vscode.theme-monokai-dimmed,vscode.theme-quietlight,vscode.theme-red,vscode.vscode-theme-seti,vscode.theme-solarized-dark,vscode.theme-solarized-light,vscode.theme-tomorrow-night-blue,vscode.tunnel-forwarding,vscode.typescript,vscode.typescript-language-features,vscode.vb,vscode.xml,vscode.yaml
+test	Run Integration Tests	2026-01-04T20:06:54.6906917Z NativeExtensionHostFactory._createLocalProcessExtensionHostDataProvider.myExtensions: iml1s.antigravity-for-loop,vscode.bat,vscode.clojure,vscode.coffeescript,vscode.configuration-editing,vscode.cpp,vscode.csharp,vscode.css,vscode.css-language-features,vscode.dart,vscode.debug-auto-launch,vscode.debug-server-ready,vscode.diff,vscode.docker,vscode.dotenv,vscode.emmet,vscode.extension-editing,vscode.fsharp,vscode.git,vscode.git-base,vscode.github,vscode.github-authentication,vscode.go,vscode.groovy,vscode.grunt,vscode.gulp,vscode.handlebars,vscode.hlsl,vscode.html,vscode.html-language-features,vscode.ini,vscode.ipynb,vscode.jake,vscode.java,vscode.javascript,vscode.json,vscode.json-language-features,vscode.julia,vscode.latex,vscode.less,vscode.log,vscode.lua,vscode.make,vscode.markdown,vscode.markdown-language-features,vscode.markdown-math,vscode.media-preview,vscode.merge-conflict,vscode.mermaid-chat-features,vscode.microsoft-authentication,ms-vscode.js-debug,ms-vscode.js-debug-companion,ms-vscode.vscode-js-profile-table,vscode.builtin-notebook-renderers,vscode.npm,vscode.objective-c,vscode.perl,vscode.php,vscode.php-language-features,vscode.powershell,vscode.prompt,vscode.pug,vscode.python,vscode.r,vscode.razor,vscode.references-view,vscode.restructuredtext,vscode.ruby,vscode.rust,vscode.scss,vscode.search-result,vscode.shaderlab,vscode.shellscript,vscode.simple-browser,vscode.sql,vscode.swift,vscode.terminal-suggest,vscode.theme-abyss,vscode.theme-defaults,vscode.theme-kimbie-dark,vscode.theme-monokai,vscode.theme-monokai-dimmed,vscode.theme-quietlight,vscode.theme-red,vscode.vscode-theme-seti,vscode.theme-solarized-dark,vscode.theme-solarized-light,vscode.theme-tomorrow-night-blue,vscode.tunnel-forwarding,vscode.typescript,vscode.typescript-language-features,vscode.vb,vscode.xml,vscode.yaml
+test	Run Integration Tests	2026-01-04T20:06:55.3643792Z Settings Sync: Account status changed from uninitialized to unavailable
+test	Run Integration Tests	2026-01-04T20:06:55.8670985Z 
+test	Run Integration Tests	2026-01-04T20:06:55.8876570Z   Extension Test Suite
+test	Run Integration Tests	2026-01-04T20:06:55.9370867Z     Extension Activation
+test	Run Integration Tests	2026-01-04T20:06:56.0017425Z Antigravity For Loop extension activated
+test	Run Integration Tests	2026-01-04T20:06:56.0477322Z       ✔ Extension should be present
+test	Run Integration Tests	2026-01-04T20:06:56.1723592Z       ✔ Extension should activate
+test	Run Integration Tests	2026-01-04T20:06:56.2397838Z     Command Registration
+test	Run Integration Tests	2026-01-04T20:06:56.2955547Z       ✔ Start command should be registered
+test	Run Integration Tests	2026-01-04T20:06:56.3429093Z       ✔ Cancel command should be registered
+test	Run Integration Tests	2026-01-04T20:06:56.3798091Z       ✔ Show menu command should be registered
+test	Run Integration Tests	2026-01-04T20:06:56.3833993Z       ✔ Show logs command should be registered
+test	Run Integration Tests	2026-01-04T20:06:56.3926303Z     Status Bar
+test	Run Integration Tests	2026-01-04T20:06:56.3936229Z       ✔ Status bar item should exist after activation
+test	Run Integration Tests	2026-01-04T20:06:56.3960562Z     State File Management
+test	Run Integration Tests	2026-01-04T20:06:56.3967295Z       ✔ Should handle missing state file gracefully
+test	Run Integration Tests	2026-01-04T20:06:56.3984069Z       ✔ Should parse valid state file
+test	Run Integration Tests	2026-01-04T20:06:56.3992846Z     Output Channel
+test	Run Integration Tests	2026-01-04T20:06:56.4534990Z       ✔ Show logs command should not throw
+test	Run Integration Tests	2026-01-04T20:06:56.4581458Z   10 passing (535ms)
+test	Run Integration Tests	2026-01-04T20:06:56.4585650Z Extension host test runner exit code: 0
+test	Run Integration Tests	2026-01-04T20:06:56.4675598Z Asking native host service to exit with code 0.
+test	Run Integration Tests	2026-01-04T20:06:56.5083833Z [90m[main 2026-01-04T20:06:56.507Z][0m Extension host with pid 2938 exited with code: 0, signal: unknown.
+test	Run Integration Tests	2026-01-04T20:06:56.6364559Z Exit code:   0
+test	Run Integration Tests	2026-01-04T20:06:56.6432782Z - Resolving version...
+test	Run Integration Tests	2026-01-04T20:06:56.6479610Z ✔ Validated version: 1.107.1
+test	Run Integration Tests	2026-01-04T20:06:56.6481530Z ✔ Found existing install in /home/runner/work/antigravity_for_loop/antigravity_for_loop/.vscode-test/vscode-linux-x64-1.107.1
+test	Run Integration Tests	2026-01-04T20:06:56.9975094Z [3143:0104/200656.996732:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:57.0077304Z [3143:0104/200657.007299:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+test	Run Integration Tests	2026-01-04T20:06:57.0102740Z [3143:0104/200657.007632:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:57.0105153Z [3143:0104/200657.007662:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:57.0107441Z [3143:0104/200657.007671:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:57.0110364Z [3143:0104/200657.007679:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:57.0112648Z [3143:0104/200657.007687:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+test	Run Integration Tests	2026-01-04T20:06:57.1105447Z [3170:0104/200657.108909:ERROR:components/viz/service/main/viz_main_impl.cc:189] Exiting GPU process due to errors during initialization
+test	Run Integration Tests	2026-01-04T20:06:57.1791797Z [90m[main 2026-01-04T20:06:57.175Z][0m update#setState disabled
+test	Run Integration Tests	2026-01-04T20:06:57.1793475Z [90m[main 2026-01-04T20:06:57.176Z][0m update#ctor - updates are disabled by the environment
+test	Run Integration Tests	2026-01-04T20:06:57.1804994Z [3143:0104/200657.180232:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run Integration Tests	2026-01-04T20:06:57.3274511Z [3225:0104/200657.326686:ERROR:components/viz/service/main/viz_main_impl.cc:189] Exiting GPU process due to errors during initialization
+test	Run Integration Tests	2026-01-04T20:06:57.6433591Z workbench#open()
+test	Run Integration Tests	2026-01-04T20:06:57.9922139Z ChatSessionStore: Migrating 0 chat sessions from storage service to file system
+test	Run Integration Tests	2026-01-04T20:06:58.3115008Z Started local extension host with pid 3408.
+test	Run Integration Tests	2026-01-04T20:06:58.3115807Z IExtensionHostStarter.start() took 39 ms.
+test	Run Integration Tests	2026-01-04T20:06:58.4094974Z Loading development extension at /home/runner/work/antigravity_for_loop/antigravity_for_loop
+test	Run Integration Tests	2026-01-04T20:06:59.1054035Z MCP Registry configured: https://api.mcp.github.com
+test	Run Integration Tests	2026-01-04T20:06:59.1607075Z NativeExtensionHostFactory._createLocalProcessExtensionHostDataProvider.scannedExtensions: vscode.bat,vscode.clojure,vscode.coffeescript,vscode.configuration-editing,vscode.cpp,vscode.csharp,vscode.css,vscode.css-language-features,vscode.dart,vscode.debug-auto-launch,vscode.debug-server-ready,vscode.diff,vscode.docker,vscode.dotenv,vscode.emmet,vscode.extension-editing,vscode.fsharp,vscode.git,vscode.git-base,vscode.github,vscode.github-authentication,vscode.go,vscode.groovy,vscode.grunt,vscode.gulp,vscode.handlebars,vscode.hlsl,vscode.html,vscode.html-language-features,vscode.ini,vscode.ipynb,vscode.jake,vscode.java,vscode.javascript,vscode.json,vscode.json-language-features,vscode.julia,vscode.latex,vscode.less,vscode.log,vscode.lua,vscode.make,vscode.markdown,vscode.markdown-language-features,vscode.markdown-math,vscode.media-preview,vscode.merge-conflict,vscode.mermaid-chat-features,vscode.microsoft-authentication,ms-vscode.js-debug,ms-vscode.js-debug-companion,ms-vscode.vscode-js-profile-table,vscode.builtin-notebook-renderers,vscode.npm,vscode.objective-c,vscode.perl,vscode.php,vscode.php-language-features,vscode.powershell,vscode.prompt,vscode.pug,vscode.python,vscode.r,vscode.razor,vscode.references-view,vscode.restructuredtext,vscode.ruby,vscode.rust,vscode.scss,vscode.search-result,vscode.shaderlab,vscode.shellscript,vscode.simple-browser,vscode.sql,vscode.swift,vscode.terminal-suggest,vscode.theme-abyss,vscode.theme-defaults,vscode.theme-kimbie-dark,vscode.theme-monokai,vscode.theme-monokai-dimmed,vscode.theme-quietlight,vscode.theme-red,vscode.vscode-theme-seti,vscode.theme-solarized-dark,vscode.theme-solarized-light,vscode.theme-tomorrow-night-blue,vscode.tunnel-forwarding,vscode.typescript,vscode.typescript-language-features,vscode.vb,vscode.xml,vscode.yaml,iml1s.antigravity-for-loop
+test	Run Integration Tests	2026-01-04T20:06:59.1801104Z NativeExtensionHostFactory._createLocalProcessExtensionHostDataProvider.localExtensions: iml1s.antigravity-for-loop,vscode.bat,vscode.clojure,vscode.coffeescript,vscode.configuration-editing,vscode.cpp,vscode.csharp,vscode.css,vscode.css-language-features,vscode.dart,vscode.debug-auto-launch,vscode.debug-server-ready,vscode.diff,vscode.docker,vscode.dotenv,vscode.emmet,vscode.extension-editing,vscode.fsharp,vscode.git,vscode.git-base,vscode.github,vscode.github-authentication,vscode.go,vscode.groovy,vscode.grunt,vscode.gulp,vscode.handlebars,vscode.hlsl,vscode.html,vscode.html-language-features,vscode.ini,vscode.ipynb,vscode.jake,vscode.java,vscode.javascript,vscode.json,vscode.json-language-features,vscode.julia,vscode.latex,vscode.less,vscode.log,vscode.lua,vscode.make,vscode.markdown,vscode.markdown-language-features,vscode.markdown-math,vscode.media-preview,vscode.merge-conflict,vscode.mermaid-chat-features,vscode.microsoft-authentication,ms-vscode.js-debug,ms-vscode.js-debug-companion,ms-vscode.vscode-js-profile-table,vscode.builtin-notebook-renderers,vscode.npm,vscode.objective-c,vscode.perl,vscode.php,vscode.php-language-features,vscode.powershell,vscode.prompt,vscode.pug,vscode.python,vscode.r,vscode.razor,vscode.references-view,vscode.restructuredtext,vscode.ruby,vscode.rust,vscode.scss,vscode.search-result,vscode.shaderlab,vscode.shellscript,vscode.simple-browser,vscode.sql,vscode.swift,vscode.terminal-suggest,vscode.theme-abyss,vscode.theme-defaults,vscode.theme-kimbie-dark,vscode.theme-monokai,vscode.theme-monokai-dimmed,vscode.theme-quietlight,vscode.theme-red,vscode.vscode-theme-seti,vscode.theme-solarized-dark,vscode.theme-solarized-light,vscode.theme-tomorrow-night-blue,vscode.tunnel-forwarding,vscode.typescript,vscode.typescript-language-features,vscode.vb,vscode.xml,vscode.yaml
+test	Run Integration Tests	2026-01-04T20:06:59.1977370Z NativeExtensionHostFactory._createLocalProcessExtensionHostDataProvider.myExtensions: iml1s.antigravity-for-loop,vscode.bat,vscode.clojure,vscode.coffeescript,vscode.configuration-editing,vscode.cpp,vscode.csharp,vscode.css,vscode.css-language-features,vscode.dart,vscode.debug-auto-launch,vscode.debug-server-ready,vscode.diff,vscode.docker,vscode.dotenv,vscode.emmet,vscode.extension-editing,vscode.fsharp,vscode.git,vscode.git-base,vscode.github,vscode.github-authentication,vscode.go,vscode.groovy,vscode.grunt,vscode.gulp,vscode.handlebars,vscode.hlsl,vscode.html,vscode.html-language-features,vscode.ini,vscode.ipynb,vscode.jake,vscode.java,vscode.javascript,vscode.json,vscode.json-language-features,vscode.julia,vscode.latex,vscode.less,vscode.log,vscode.lua,vscode.make,vscode.markdown,vscode.markdown-language-features,vscode.markdown-math,vscode.media-preview,vscode.merge-conflict,vscode.mermaid-chat-features,vscode.microsoft-authentication,ms-vscode.js-debug,ms-vscode.js-debug-companion,ms-vscode.vscode-js-profile-table,vscode.builtin-notebook-renderers,vscode.npm,vscode.objective-c,vscode.perl,vscode.php,vscode.php-language-features,vscode.powershell,vscode.prompt,vscode.pug,vscode.python,vscode.r,vscode.razor,vscode.references-view,vscode.restructuredtext,vscode.ruby,vscode.rust,vscode.scss,vscode.search-result,vscode.shaderlab,vscode.shellscript,vscode.simple-browser,vscode.sql,vscode.swift,vscode.terminal-suggest,vscode.theme-abyss,vscode.theme-defaults,vscode.theme-kimbie-dark,vscode.theme-monokai,vscode.theme-monokai-dimmed,vscode.theme-quietlight,vscode.theme-red,vscode.vscode-theme-seti,vscode.theme-solarized-dark,vscode.theme-solarized-light,vscode.theme-tomorrow-night-blue,vscode.tunnel-forwarding,vscode.typescript,vscode.typescript-language-features,vscode.vb,vscode.xml,vscode.yaml
+test	Run Integration Tests	2026-01-04T20:06:59.9484105Z Settings Sync: Account status changed from uninitialized to unavailable
+test	Run Integration Tests	2026-01-04T20:07:00.3037610Z 
+test	Run Integration Tests	2026-01-04T20:07:00.3662832Z   Antigravity For Loop E2E Tests
+test	Run Integration Tests	2026-01-04T20:07:00.4030775Z Antigravity For Loop extension activated
+test	Run Integration Tests	2026-01-04T20:07:02.4076299Z     Command Palette
+test	Run Integration Tests	2026-01-04T20:07:02.4572826Z       ✔ should execute commands without errors
+test	Run Integration Tests	2026-01-04T20:07:03.0272367Z       ✔ should show menu command (617ms)
+test	Run Integration Tests	2026-01-04T20:07:03.0276469Z     Status Bar
+test	Run Integration Tests	2026-01-04T20:07:03.0285565Z       ✔ should have status bar item registered
+test	Run Integration Tests	2026-01-04T20:07:03.0292291Z     Output Channel
+test	Run Integration Tests	2026-01-04T20:07:03.0308584Z       ✔ should have output channel available
+test	Run Integration Tests	2026-01-04T20:07:03.0312615Z   4 passing (3s)
+test	Run Integration Tests	2026-01-04T20:07:03.0317402Z Extension host test runner exit code: 0
+test	Run Integration Tests	2026-01-04T20:07:03.0413235Z Asking native host service to exit with code 0.
+test	Run Integration Tests	2026-01-04T20:07:03.0478709Z [90m[main 2026-01-04T20:07:03.047Z][0m Extension host with pid 3408 exited with code: 0, signal: unknown.
+test	Run Integration Tests	2026-01-04T20:07:03.1053016Z Exit code:   0
+test	Run E2E Tests	﻿2026-01-04T20:07:03.1338799Z ##[group]Run xvfb-run -a npm run test:e2e
+test	Run E2E Tests	2026-01-04T20:07:03.1339129Z [36;1mxvfb-run -a npm run test:e2e[0m
+test	Run E2E Tests	2026-01-04T20:07:03.1371726Z shell: /usr/bin/bash -e {0}
+test	Run E2E Tests	2026-01-04T20:07:03.1371964Z ##[endgroup]
+test	Run E2E Tests	2026-01-04T20:07:03.2729310Z 
+test	Run E2E Tests	2026-01-04T20:07:03.2730110Z > antigravity-for-loop@0.2.0 test:e2e
+test	Run E2E Tests	2026-01-04T20:07:03.2730639Z > npx @vscode/test-cli --label e2e
+test	Run E2E Tests	2026-01-04T20:07:03.2730856Z 
+test	Run E2E Tests	2026-01-04T20:07:04.0618962Z - Resolving version...
+test	Run E2E Tests	2026-01-04T20:07:04.1774734Z ✔ Validated version: 1.107.1
+test	Run E2E Tests	2026-01-04T20:07:04.1787052Z ✔ Found existing install in /home/runner/work/antigravity_for_loop/antigravity_for_loop/.vscode-test/vscode-linux-x64-1.107.1
+test	Run E2E Tests	2026-01-04T20:07:04.5065453Z [3662:0104/200704.505916:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run E2E Tests	2026-01-04T20:07:04.5165579Z [3662:0104/200704.516254:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+test	Run E2E Tests	2026-01-04T20:07:04.5193249Z [3662:0104/200704.518888:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run E2E Tests	2026-01-04T20:07:04.5195909Z [3662:0104/200704.518913:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run E2E Tests	2026-01-04T20:07:04.5198224Z [3662:0104/200704.518923:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run E2E Tests	2026-01-04T20:07:04.5202679Z [3662:0104/200704.518937:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run E2E Tests	2026-01-04T20:07:04.5205528Z [3662:0104/200704.518946:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+test	Run E2E Tests	2026-01-04T20:07:04.6069397Z [3689:0104/200704.606352:ERROR:components/viz/service/main/viz_main_impl.cc:189] Exiting GPU process due to errors during initialization
+test	Run E2E Tests	2026-01-04T20:07:04.6692159Z [90m[main 2026-01-04T20:07:04.667Z][0m update#setState disabled
+test	Run E2E Tests	2026-01-04T20:07:04.6693400Z [90m[main 2026-01-04T20:07:04.668Z][0m update#ctor - updates are disabled by the environment
+test	Run E2E Tests	2026-01-04T20:07:04.6712999Z [3662:0104/200704.670024:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+test	Run E2E Tests	2026-01-04T20:07:04.8016390Z [3743:0104/200704.800853:ERROR:components/viz/service/main/viz_main_impl.cc:189] Exiting GPU process due to errors during initialization
+test	Run E2E Tests	2026-01-04T20:07:05.0600870Z workbench#open()
+test	Run E2E Tests	2026-01-04T20:07:05.3900355Z ChatSessionStore: Migrating 0 chat sessions from storage service to file system
+test	Run E2E Tests	2026-01-04T20:07:05.6621881Z Started local extension host with pid 3927.
+test	Run E2E Tests	2026-01-04T20:07:05.6623088Z IExtensionHostStarter.start() took 23 ms.
+test	Run E2E Tests	2026-01-04T20:07:06.1694729Z Loading development extension at /home/runner/work/antigravity_for_loop/antigravity_for_loop
+test	Run E2E Tests	2026-01-04T20:07:06.4149122Z NativeExtensionHostFactory._createLocalProcessExtensionHostDataProvider.scannedExtensions: vscode.bat,vscode.clojure,vscode.coffeescript,vscode.configuration-editing,vscode.cpp,vscode.csharp,vscode.css,vscode.css-language-features,vscode.dart,vscode.debug-auto-launch,vscode.debug-server-ready,vscode.diff,vscode.docker,vscode.dotenv,vscode.emmet,vscode.extension-editing,vscode.fsharp,vscode.git,vscode.git-base,vscode.github,vscode.github-authentication,vscode.go,vscode.groovy,vscode.grunt,vscode.gulp,vscode.handlebars,vscode.hlsl,vscode.html,vscode.html-language-features,vscode.ini,vscode.ipynb,vscode.jake,vscode.java,vscode.javascript,vscode.json,vscode.json-language-features,vscode.julia,vscode.latex,vscode.less,vscode.log,vscode.lua,vscode.make,vscode.markdown,vscode.markdown-language-features,vscode.markdown-math,vscode.media-preview,vscode.merge-conflict,vscode.mermaid-chat-features,vscode.microsoft-authentication,ms-vscode.js-debug,ms-vscode.js-debug-companion,ms-vscode.vscode-js-profile-table,vscode.builtin-notebook-renderers,vscode.npm,vscode.objective-c,vscode.perl,vscode.php,vscode.php-language-features,vscode.powershell,vscode.prompt,vscode.pug,vscode.python,vscode.r,vscode.razor,vscode.references-view,vscode.restructuredtext,vscode.ruby,vscode.rust,vscode.scss,vscode.search-result,vscode.shaderlab,vscode.shellscript,vscode.simple-browser,vscode.sql,vscode.swift,vscode.terminal-suggest,vscode.theme-abyss,vscode.theme-defaults,vscode.theme-kimbie-dark,vscode.theme-monokai,vscode.theme-monokai-dimmed,vscode.theme-quietlight,vscode.theme-red,vscode.vscode-theme-seti,vscode.theme-solarized-dark,vscode.theme-solarized-light,vscode.theme-tomorrow-night-blue,vscode.tunnel-forwarding,vscode.typescript,vscode.typescript-language-features,vscode.vb,vscode.xml,vscode.yaml,iml1s.antigravity-for-loop
+test	Run E2E Tests	2026-01-04T20:07:06.4273273Z NativeExtensionHostFactory._createLocalProcessExtensionHostDataProvider.localExtensions: iml1s.antigravity-for-loop,vscode.bat,vscode.clojure,vscode.coffeescript,vscode.configuration-editing,vscode.cpp,vscode.csharp,vscode.css,vscode.css-language-features,vscode.dart,vscode.debug-auto-launch,vscode.debug-server-ready,vscode.diff,vscode.docker,vscode.dotenv,vscode.emmet,vscode.extension-editing,vscode.fsharp,vscode.git,vscode.git-base,vscode.github,vscode.github-authentication,vscode.go,vscode.groovy,vscode.grunt,vscode.gulp,vscode.handlebars,vscode.hlsl,vscode.html,vscode.html-language-features,vscode.ini,vscode.ipynb,vscode.jake,vscode.java,vscode.javascript,vscode.json,vscode.json-language-features,vscode.julia,vscode.latex,vscode.less,vscode.log,vscode.lua,vscode.make,vscode.markdown,vscode.markdown-language-features,vscode.markdown-math,vscode.media-preview,vscode.merge-conflict,vscode.mermaid-chat-features,vscode.microsoft-authentication,ms-vscode.js-debug,ms-vscode.js-debug-companion,ms-vscode.vscode-js-profile-table,vscode.builtin-notebook-renderers,vscode.npm,vscode.objective-c,vscode.perl,vscode.php,vscode.php-language-features,vscode.powershell,vscode.prompt,vscode.pug,vscode.python,vscode.r,vscode.razor,vscode.references-view,vscode.restructuredtext,vscode.ruby,vscode.rust,vscode.scss,vscode.search-result,vscode.shaderlab,vscode.shellscript,vscode.simple-browser,vscode.sql,vscode.swift,vscode.terminal-suggest,vscode.theme-abyss,vscode.theme-defaults,vscode.theme-kimbie-dark,vscode.theme-monokai,vscode.theme-monokai-dimmed,vscode.theme-quietlight,vscode.theme-red,vscode.vscode-theme-seti,vscode.theme-solarized-dark,vscode.theme-solarized-light,vscode.theme-tomorrow-night-blue,vscode.tunnel-forwarding,vscode.typescript,vscode.typescript-language-features,vscode.vb,vscode.xml,vscode.yaml
+test	Run E2E Tests	2026-01-04T20:07:06.4344777Z NativeExtensionHostFactory._createLocalProcessExtensionHostDataProvider.myExtensions: iml1s.antigravity-for-loop,vscode.bat,vscode.clojure,vscode.coffeescript,vscode.configuration-editing,vscode.cpp,vscode.csharp,vscode.css,vscode.css-language-features,vscode.dart,vscode.debug-auto-launch,vscode.debug-server-ready,vscode.diff,vscode.docker,vscode.dotenv,vscode.emmet,vscode.extension-editing,vscode.fsharp,vscode.git,vscode.git-base,vscode.github,vscode.github-authentication,vscode.go,vscode.groovy,vscode.grunt,vscode.gulp,vscode.handlebars,vscode.hlsl,vscode.html,vscode.html-language-features,vscode.ini,vscode.ipynb,vscode.jake,vscode.java,vscode.javascript,vscode.json,vscode.json-language-features,vscode.julia,vscode.latex,vscode.less,vscode.log,vscode.lua,vscode.make,vscode.markdown,vscode.markdown-language-features,vscode.markdown-math,vscode.media-preview,vscode.merge-conflict,vscode.mermaid-chat-features,vscode.microsoft-authentication,ms-vscode.js-debug,ms-vscode.js-debug-companion,ms-vscode.vscode-js-profile-table,vscode.builtin-notebook-renderers,vscode.npm,vscode.objective-c,vscode.perl,vscode.php,vscode.php-language-features,vscode.powershell,vscode.prompt,vscode.pug,vscode.python,vscode.r,vscode.razor,vscode.references-view,vscode.restructuredtext,vscode.ruby,vscode.rust,vscode.scss,vscode.search-result,vscode.shaderlab,vscode.shellscript,vscode.simple-browser,vscode.sql,vscode.swift,vscode.terminal-suggest,vscode.theme-abyss,vscode.theme-defaults,vscode.theme-kimbie-dark,vscode.theme-monokai,vscode.theme-monokai-dimmed,vscode.theme-quietlight,vscode.theme-red,vscode.vscode-theme-seti,vscode.theme-solarized-dark,vscode.theme-solarized-light,vscode.theme-tomorrow-night-blue,vscode.tunnel-forwarding,vscode.typescript,vscode.typescript-language-features,vscode.vb,vscode.xml,vscode.yaml
+test	Run E2E Tests	2026-01-04T20:07:06.8989569Z MCP Registry configured: https://api.mcp.github.com
+test	Run E2E Tests	2026-01-04T20:07:07.1559219Z Settings Sync: Account status changed from uninitialized to unavailable
+test	Run E2E Tests	2026-01-04T20:07:07.2744296Z 
+test	Run E2E Tests	2026-01-04T20:07:07.2974017Z   Antigravity For Loop E2E Tests
+test	Run E2E Tests	2026-01-04T20:07:07.3944624Z Antigravity For Loop extension activated
+test	Run E2E Tests	2026-01-04T20:07:09.3902863Z     Command Palette
+test	Run E2E Tests	2026-01-04T20:07:09.4373172Z       ✔ should execute commands without errors
+test	Run E2E Tests	2026-01-04T20:07:10.0084021Z       ✔ should show menu command (615ms)
+test	Run E2E Tests	2026-01-04T20:07:10.0091729Z     Status Bar
+test	Run E2E Tests	2026-01-04T20:07:10.0099855Z       ✔ should have status bar item registered
+test	Run E2E Tests	2026-01-04T20:07:10.0100557Z     Output Channel
+test	Run E2E Tests	2026-01-04T20:07:10.0116983Z       ✔ should have output channel available
+test	Run E2E Tests	2026-01-04T20:07:10.0122593Z   4 passing (3s)
+test	Run E2E Tests	2026-01-04T20:07:10.0127191Z Extension host test runner exit code: 0
+test	Run E2E Tests	2026-01-04T20:07:10.0254612Z Asking native host service to exit with code 0.
+test	Run E2E Tests	2026-01-04T20:07:10.0326865Z [90m[main 2026-01-04T20:07:10.032Z][0m Extension host with pid 3927 exited with code: 0, signal: unknown.
+test	Run E2E Tests	2026-01-04T20:07:10.0948116Z Exit code:   0
+test	Post Setup Node.js	﻿2026-01-04T20:07:10.1291308Z Post job cleanup.
+test	Post Run actions/checkout@v4	﻿2026-01-04T20:07:10.2938397Z Post job cleanup.
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.3869564Z [command]/usr/bin/git version
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.3904945Z git version 2.52.0
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.3949431Z Temporarily overriding HOME='/home/runner/work/_temp/3255415b-f276-4584-82b1-15a0fda0200a' before making global git config changes
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.3951176Z Adding repository directory to the temporary git global config as a safe directory
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.3956132Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/antigravity_for_loop/antigravity_for_loop
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.3991634Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.4024197Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.4249642Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.4269841Z http.https://github.com/.extraheader
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.4282904Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.4313548Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.4528756Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test	Post Run actions/checkout@v4	2026-01-04T20:07:10.4558969Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test	Complete job	﻿2026-01-04T20:07:10.4879821Z Cleaning up orphan processes

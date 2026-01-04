@@ -29,15 +29,15 @@ suite('Antigravity For Loop E2E Tests', function () {
         });
 
         test('should show menu command', async function () {
-            // Execute show menu command
-            try {
-                await vscode.commands.executeCommand('antigravity-for-loop.showMenu');
-                await new Promise(resolve => setTimeout(resolve, 500));
-                // Cancel any open quick pick
-                await vscode.commands.executeCommand('workbench.action.closeQuickOpen');
-            } catch (e) {
-                // Quick pick may close naturally, that's OK
-            }
+            // Execute show menu command - DO NOT await as it blocks for QuickPick
+            vscode.commands.executeCommand('antigravity-for-loop.showMenu');
+
+            // Wait for it to show up
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // Cancel any open quick pick
+            await vscode.commands.executeCommand('workbench.action.closeQuickOpen');
+
             assert.ok(true, 'Show menu command executed');
         });
     });
