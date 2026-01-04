@@ -24,3 +24,10 @@ coverage/
 # Build artifacts
 *.vsix
 dist/
+
+# Node.js
+node_modules/
+
+# VSCode Test
+.vscode-test/
+.wdio-vscode-service/

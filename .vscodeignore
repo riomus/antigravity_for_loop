@@ -1,0 +1,34 @@
+# VSCode Extension Ignore File
+# Exclude files not needed in the published extension
+
+# Development files
+.vscode/
+.github/
+.gitignore
+.env
+.env.local
+.shellspec
+
+# Test files
+test/
+spec/
+*.test.js
+*.spec.js
+.vscode-test/
+.wdio-vscode-service/
+.vscode-test.mjs
+wdio.conf.js
+
+# Build tools
+node_modules/
+*.vsix
+
+# Documentation (internal)
+docs/
+
+# Playwright/Browser caches
+.playwright-mcp/
+
+# Other
+*.md
+!README.md

@@ -61,6 +61,8 @@ EOF
             
             When run source ./hooks/on_stop.sh
             The status should eq 0
+            The stderr should include '[for-loop]'
+            The output should include 'allow'
         End
         
         It '輸出包含 decision: allow'
@@ -68,6 +70,7 @@ EOF
             
             When run source ./hooks/on_stop.sh
             The output should include 'allow'
+            The stderr should include '[for-loop]'
         End
     End
     

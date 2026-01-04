@@ -13,13 +13,20 @@
 
 ## 安裝
 
+### Antigravity Native Workflow (推薦)
+
+1. 將 `antigravity_for_loop/workflows/for-loop.md` 複製到您的專案或全域 `.agent/workflows/` 目錄下。
+2. 確保 `commands/` 和 `hooks/` 目錄在可執行路徑中，或修改 Workflow 文件指向絕對路徑。
+3. 在 Antigravity 中直接使用 `/for-loop` 命令。
+
+### VSCode 擴展安裝
+
 ```bash
 # 在 Antigravity IDE 中安裝
 /plugin install antigravity_for_loop
 ```
 
 或手動安裝：
-
 ```bash
 git clone https://github.com/antigravity/antigravity_for_loop.git
 cd antigravity_for_loop
@@ -70,8 +77,11 @@ cd antigravity_for_loop
 
 ```
 antigravity_for_loop/
-├── plugin.json              # 插件清單
+├── plugin.json              # 插件清單 (Legacy/Compatible)
+├── package.json             # VSCode 擴展清單
 ├── README.md                # 本文件
+├── workflows/
+│   └── for-loop.md         # Antigravity Workflow 定義
 ├── hooks/
 │   └── on_stop.sh          # Stop Hook 腳本
 ├── commands/
