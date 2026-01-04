@@ -622,31 +622,264 @@ function toggleContinuationEnforcer() {
 }
 
 /**
- * Start a new fix loop
+ * Detect test/build command based on project type
+ * Supports 20+ languages and frameworks
+ */
+function detectTestCommand(workspacePath) {
+    const exists = (file) => fs.existsSync(path.join(workspacePath, file));
+    const readJson = (file) => {
+        try {
+            return JSON.parse(fs.readFileSync(path.join(workspacePath, file), 'utf8'));
+        } catch (e) { return null; }
+    };
+    const findFile = (pattern) => {
+        try {
+            const files = fs.readdirSync(workspacePath);
+            return files.find(f => f.match(pattern));
+        } catch (e) { return null; }
+    };
+
+    const detected = [];
+
+    // ===== JavaScript / TypeScript =====
+    if (exists('package.json')) {
+        const pkg = readJson('package.json');
+        if (pkg?.scripts?.test && pkg.scripts.test !== 'echo "Error: no test specified" && exit 1') {
+            detected.push({ cmd: 'npm test', type: 'npm', lang: 'JavaScript/TypeScript', priority: 10 });
+        }
+        if (pkg?.scripts?.build) {
+            detected.push({ cmd: 'npm run build', type: 'build', lang: 'JavaScript/TypeScript', priority: 5 });
+        }
+        if (pkg?.scripts?.lint) {
+            detected.push({ cmd: 'npm run lint', type: 'lint', lang: 'JavaScript/TypeScript', priority: 3 });
+        }
+    }
+    if (exists('deno.json') || exists('deno.jsonc')) {
+        detected.push({ cmd: 'deno test', type: 'deno', lang: 'Deno', priority: 10 });
+    }
+    if (exists('bun.lockb')) {
+        detected.push({ cmd: 'bun test', type: 'bun', lang: 'Bun', priority: 10 });
+    }
+
+    // ===== Python =====
+    if (exists('pyproject.toml') || exists('setup.py') || exists('requirements.txt') || exists('Pipfile')) {
+        if (exists('pytest.ini') || exists('pyproject.toml')) {
+            detected.push({ cmd: 'pytest', type: 'pytest', lang: 'Python', priority: 10 });
+        } else if (exists('tox.ini')) {
+            detected.push({ cmd: 'tox', type: 'tox', lang: 'Python', priority: 10 });
+        } else {
+            detected.push({ cmd: 'python -m pytest', type: 'python', lang: 'Python', priority: 8 });
+        }
+        if (exists('mypy.ini') || exists('pyproject.toml')) {
+            detected.push({ cmd: 'mypy .', type: 'mypy', lang: 'Python', priority: 5 });
+        }
+    }
+
+    // ===== Rust =====
+    if (exists('Cargo.toml')) {
+        detected.push({ cmd: 'cargo test', type: 'cargo', lang: 'Rust', priority: 10 });
+        detected.push({ cmd: 'cargo build', type: 'cargo-build', lang: 'Rust', priority: 5 });
+        detected.push({ cmd: 'cargo clippy', type: 'clippy', lang: 'Rust', priority: 3 });
+    }
+
+    // ===== Go =====
+    if (exists('go.mod')) {
+        detected.push({ cmd: 'go test ./...', type: 'go', lang: 'Go', priority: 10 });
+        detected.push({ cmd: 'go build ./...', type: 'go-build', lang: 'Go', priority: 5 });
+        detected.push({ cmd: 'golangci-lint run', type: 'golint', lang: 'Go', priority: 3 });
+    }
+
+    // ===== Java / Kotlin (JVM) =====
+    if (exists('pom.xml')) {
+        detected.push({ cmd: 'mvn test', type: 'maven', lang: 'Java/Kotlin', priority: 10 });
+        detected.push({ cmd: 'mvn compile', type: 'maven-build', lang: 'Java/Kotlin', priority: 5 });
+    }
+    if (exists('build.gradle') || exists('build.gradle.kts')) {
+        detected.push({ cmd: './gradlew test', type: 'gradle', lang: 'Java/Kotlin', priority: 10 });
+        detected.push({ cmd: './gradlew build', type: 'gradle-build', lang: 'Java/Kotlin', priority: 5 });
+    }
+
+    // ===== Ruby =====
+    if (exists('Gemfile')) {
+        if (exists('.rspec') || exists('spec')) {
+            detected.push({ cmd: 'bundle exec rspec', type: 'rspec', lang: 'Ruby', priority: 10 });
+        } else if (exists('Rakefile')) {
+            detected.push({ cmd: 'bundle exec rake test', type: 'rake', lang: 'Ruby', priority: 10 });
+        } else {
+            detected.push({ cmd: 'bundle exec rake', type: 'ruby', lang: 'Ruby', priority: 8 });
+        }
+    }
+
+    // ===== .NET / C# / F# =====
+    if (findFile(/\.sln$/) || findFile(/\.csproj$/) || findFile(/\.fsproj$/)) {
+        detected.push({ cmd: 'dotnet test', type: 'dotnet', lang: '.NET', priority: 10 });
+        detected.push({ cmd: 'dotnet build', type: 'dotnet-build', lang: '.NET', priority: 5 });
+    }
+
+    // ===== PHP =====
+    if (exists('composer.json')) {
+        if (exists('phpunit.xml') || exists('phpunit.xml.dist')) {
+            detected.push({ cmd: './vendor/bin/phpunit', type: 'phpunit', lang: 'PHP', priority: 10 });
+        }
+        const composer = readJson('composer.json');
+        if (composer?.scripts?.test) {
+            detected.push({ cmd: 'composer test', type: 'composer', lang: 'PHP', priority: 9 });
+        }
+    }
+
+    // ===== Swift =====
+    if (exists('Package.swift')) {
+        detected.push({ cmd: 'swift test', type: 'swift', lang: 'Swift', priority: 10 });
+        detected.push({ cmd: 'swift build', type: 'swift-build', lang: 'Swift', priority: 5 });
+    }
+    if (findFile(/\.xcodeproj$/) || findFile(/\.xcworkspace$/)) {
+        detected.push({ cmd: 'xcodebuild test', type: 'xcode', lang: 'Swift/ObjC', priority: 8 });
+    }
+
+    // ===== Dart / Flutter =====
+    if (exists('pubspec.yaml')) {
+        if (exists('test')) {
+            if (exists('android') || exists('ios')) {
+                detected.push({ cmd: 'flutter test', type: 'flutter', lang: 'Flutter', priority: 10 });
+            } else {
+                detected.push({ cmd: 'dart test', type: 'dart', lang: 'Dart', priority: 10 });
+            }
+        }
+        detected.push({ cmd: 'dart analyze', type: 'dart-analyze', lang: 'Dart', priority: 5 });
+    }
+
+    // ===== Elixir =====
+    if (exists('mix.exs')) {
+        detected.push({ cmd: 'mix test', type: 'elixir', lang: 'Elixir', priority: 10 });
+    }
+
+    // ===== Erlang =====
+    if (exists('rebar.config')) {
+        detected.push({ cmd: 'rebar3 eunit', type: 'erlang', lang: 'Erlang', priority: 10 });
+    }
+
+    // ===== Haskell =====
+    if (exists('stack.yaml')) {
+        detected.push({ cmd: 'stack test', type: 'stack', lang: 'Haskell', priority: 10 });
+    }
+    if (exists('cabal.project') || findFile(/\.cabal$/)) {
+        detected.push({ cmd: 'cabal test', type: 'cabal', lang: 'Haskell', priority: 9 });
+    }
+
+    // ===== Scala =====
+    if (exists('build.sbt')) {
+        detected.push({ cmd: 'sbt test', type: 'sbt', lang: 'Scala', priority: 10 });
+    }
+
+    // ===== Clojure =====
+    if (exists('project.clj')) {
+        detected.push({ cmd: 'lein test', type: 'lein', lang: 'Clojure', priority: 10 });
+    }
+    if (exists('deps.edn')) {
+        detected.push({ cmd: 'clj -X:test', type: 'clojure', lang: 'Clojure', priority: 9 });
+    }
+
+    // ===== C / C++ =====
+    if (exists('CMakeLists.txt')) {
+        detected.push({ cmd: 'cmake --build build && ctest --test-dir build', type: 'cmake', lang: 'C/C++', priority: 10 });
+    }
+    if (exists('meson.build')) {
+        detected.push({ cmd: 'meson test -C build', type: 'meson', lang: 'C/C++', priority: 10 });
+    }
+    if (exists('conanfile.txt') || exists('conanfile.py')) {
+        detected.push({ cmd: 'conan build . && ctest', type: 'conan', lang: 'C/C++', priority: 8 });
+    }
+
+    // ===== Zig =====
+    if (exists('build.zig')) {
+        detected.push({ cmd: 'zig build test', type: 'zig', lang: 'Zig', priority: 10 });
+    }
+
+    // ===== Nim =====
+    if (findFile(/\.nimble$/)) {
+        detected.push({ cmd: 'nimble test', type: 'nim', lang: 'Nim', priority: 10 });
+    }
+
+    // ===== V =====
+    if (exists('v.mod')) {
+        detected.push({ cmd: 'v test .', type: 'vlang', lang: 'V', priority: 10 });
+    }
+
+    // ===== OCaml =====
+    if (exists('dune-project')) {
+        detected.push({ cmd: 'dune runtest', type: 'dune', lang: 'OCaml', priority: 10 });
+    }
+
+    // ===== Generic Build Systems =====
+    if (exists('Makefile') || exists('makefile') || exists('GNUmakefile')) {
+        detected.push({ cmd: 'make test', type: 'make', lang: 'Make', priority: 6 });
+        detected.push({ cmd: 'make', type: 'make-build', lang: 'Make', priority: 4 });
+    }
+    if (exists('justfile') || exists('Justfile')) {
+        detected.push({ cmd: 'just test', type: 'just', lang: 'Just', priority: 7 });
+    }
+    if (exists('Taskfile.yml') || exists('Taskfile.yaml')) {
+        detected.push({ cmd: 'task test', type: 'task', lang: 'Task', priority: 7 });
+    }
+    if (exists('Earthfile')) {
+        detected.push({ cmd: 'earthly +test', type: 'earthly', lang: 'Earthly', priority: 7 });
+    }
+    if (exists('BUILD.bazel') || exists('WORKSPACE')) {
+        detected.push({ cmd: 'bazel test //...', type: 'bazel', lang: 'Bazel', priority: 8 });
+    }
+    if (exists('pants.toml')) {
+        detected.push({ cmd: 'pants test ::', type: 'pants', lang: 'Pants', priority: 8 });
+    }
+
+    // Sort by priority and return the highest
+    if (detected.length === 0) return null;
+    detected.sort((a, b) => b.priority - a.priority);
+    return detected[0];
+}
+
+/**
+ * Get all detected commands for a project (for showing options)
+ */
+function detectAllCommands(workspacePath) {
+    const exists = (file) => fs.existsSync(path.join(workspacePath, file));
+    const readJson = (file) => {
+        try {
+            return JSON.parse(fs.readFileSync(path.join(workspacePath, file), 'utf8'));
+        } catch (e) { return null; }
+    };
+    const findFile = (pattern) => {
+        try {
+            const files = fs.readdirSync(workspacePath);
+            return files.find(f => f.match(pattern));
+        } catch (e) { return null; }
+    };
+
+    const detected = [];
+
+    // Reuse same logic but collect all
+    if (exists('package.json')) {
+        const pkg = readJson('package.json');
+        if (pkg?.scripts) {
+            Object.entries(pkg.scripts).forEach(([name, script]) => {
+                if (['test', 'build', 'lint', 'typecheck', 'check'].includes(name)) {
+                    detected.push({ cmd: `npm run ${name}`, type: name, lang: 'npm', script });
+                }
+            });
+        }
+    }
+    // Add other common commands from detectTestCommand
+    const primary = detectTestCommand(workspacePath);
+    if (primary && !detected.find(d => d.cmd === primary.cmd)) {
+        detected.unshift(primary);
+    }
+
+    return detected;
+}
+
+/**
+ * Start loop with improved UX - Quick Start mode
  */
 async function startLoop() {
-    const taskDescription = await vscode.window.showInputBox({
-        prompt: 'Enter task description',
-        placeHolder: 'e.g., Fix all TypeScript errors'
-    });
-
-    if (!taskDescription) return;
-
-    const maxIterations = await vscode.window.showInputBox({
-        prompt: 'Maximum iterations',
-        placeHolder: '10',
-        value: '10',
-        validateInput: (value) => {
-            const num = parseInt(value);
-            if (isNaN(num) || num < 1 || num > 100) {
-                return 'Please enter a number between 1 and 100';
-            }
-            return null;
-        }
-    });
-
-    if (!maxIterations) return;
-
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders || workspaceFolders.length === 0) {
         vscode.window.showErrorMessage('No workspace folder open');
@@ -654,25 +887,163 @@ async function startLoop() {
     }
 
     const workspacePath = workspaceFolders[0].uri.fsPath;
-    const scriptPath = path.join(__dirname, 'commands', 'for-loop.sh');
+    const detectedCmd = detectTestCommand(workspacePath);
 
-    outputChannel.appendLine(`[Start] Task: "${taskDescription}" | Max: ${maxIterations}`);
+    // Step 1: Task description
+    const taskDescription = await vscode.window.showInputBox({
+        prompt: '📝 描述你的任務',
+        placeHolder: '例如：修復所有 TypeScript 錯誤',
+        ignoreFocusOut: true
+    });
+
+    if (!taskDescription) return;
+
+    // Step 2: Completion condition (Quick Pick)
+    const completionOptions = [
+        {
+            label: '$(check) 測試通過',
+            description: detectedCmd
+                ? `${detectedCmd.lang}: ${detectedCmd.cmd}`
+                : '未偵測到測試命令',
+            value: 'test',
+            command: detectedCmd?.cmd || null,
+            detail: detectedCmd ? `偵測到 ${detectedCmd.lang} 專案` : undefined
+        },
+        {
+            label: '$(package) Build 成功',
+            description: detectedCmd?.type?.includes('build')
+                ? detectedCmd.cmd
+                : '編譯/建置成功即停止',
+            value: 'build',
+            command: detectedCmd?.cmd || 'make'
+        },
+        {
+            label: '$(eye) AI 自行判斷',
+            description: '讓 AI 決定何時完成（較不精確）',
+            value: 'ai',
+            command: null
+        },
+        {
+            label: '$(terminal) 自訂命令...',
+            description: '輸入自訂的驗證命令',
+            value: 'custom',
+            command: null
+        }
+    ];
+
+    const completionChoice = await vscode.window.showQuickPick(completionOptions, {
+        placeHolder: '⏹️ 選擇完成條件（什麼時候停止迴圈？）',
+        ignoreFocusOut: true
+    });
+
+    if (!completionChoice) return;
+
+    let checkCommand = completionChoice.command;
+
+    // If custom or no detected command, ask for command
+    if (completionChoice.value === 'custom' || !checkCommand) {
+        checkCommand = await vscode.window.showInputBox({
+            prompt: completionChoice.value === 'custom'
+                ? '輸入驗證命令（成功時 exit 0）'
+                : '未偵測到測試命令，請手動輸入',
+            placeHolder: '例如：npm test, cargo test, pytest, make test',
+            ignoreFocusOut: true
+        });
+        if (!checkCommand) return;
+    }
+
+    // Step 3: Max iterations (with sensible default)
+    const maxChoice = await vscode.window.showQuickPick([
+        { label: '5 次', value: '5', description: '快速嘗試' },
+        { label: '10 次', value: '10', description: '推薦' },
+        { label: '20 次', value: '20', description: '複雜任務' },
+        { label: '自訂...', value: 'custom' }
+    ], {
+        placeHolder: '🔄 最大迭代次數',
+        ignoreFocusOut: true
+    });
+
+    if (!maxChoice) return;
+
+    let maxIterations = maxChoice.value;
+    if (maxChoice.value === 'custom') {
+        maxIterations = await vscode.window.showInputBox({
+            prompt: '輸入最大迭代次數 (1-100)',
+            value: '10',
+            validateInput: (v) => {
+                const n = parseInt(v);
+                return (isNaN(n) || n < 1 || n > 100) ? '請輸入 1-100 的數字' : null;
+            }
+        });
+        if (!maxIterations) return;
+    }
+
+    // Step 4: Enable Auto-Accept?
+    if (!autoAcceptEnabled) {
+        const enableAA = await vscode.window.showQuickPick([
+            { label: '$(check) 是，開啟 Auto-Accept', value: true, description: '推薦 - 全自動執行' },
+            { label: '$(x) 否，手動確認每個步驟', value: false }
+        ], {
+            placeHolder: '🤖 要開啟 Auto-Accept 嗎？'
+        });
+
+        if (enableAA?.value) {
+            autoAcceptEnabled = true;
+            startAutoAcceptLoop();
+        }
+    }
+
+    // Create state and start
+    outputChannel.appendLine('\n' + '='.repeat(50));
+    outputChannel.appendLine(`[Start] 🚀 開始修復迴圈`);
+    outputChannel.appendLine(`[Start] 任務: ${taskDescription}`);
+    outputChannel.appendLine(`[Start] 完成條件: ${completionChoice.label} ${checkCommand ? `(${checkCommand})` : ''}`);
+    outputChannel.appendLine(`[Start] 最大迭代: ${maxIterations}`);
+    outputChannel.appendLine(`[Start] Auto-Accept: ${autoAcceptEnabled ? 'ON' : 'OFF'}`);
+    outputChannel.appendLine('='.repeat(50) + '\n');
     outputChannel.show();
 
-    // Execute the shell script
-    const command = `bash "${scriptPath}" "${taskDescription}" --max-iterations ${maxIterations}`;
-    exec(command, { cwd: workspacePath }, (error, stdout, stderr) => {
-        if (error) {
-            outputChannel.appendLine(`[Error] ${error.message}`);
-            vscode.window.showErrorMessage(`Failed to start loop: ${error.message}`);
-            return;
-        }
-        if (stdout) outputChannel.appendLine(stdout);
-        if (stderr) outputChannel.appendLine(stderr);
+    // Initialize state
+    const statePath = path.join(workspacePath, '.antigravity', 'for-loop-state.json');
+    const stateDir = path.dirname(statePath);
 
-        vscode.window.showInformationMessage('Fix loop started! Monitor progress in the status bar.');
-        updateStatusBar();
-    });
+    if (!fs.existsSync(stateDir)) {
+        fs.mkdirSync(stateDir, { recursive: true });
+    }
+
+    const initialState = {
+        status: 'running',
+        iteration: 1,
+        max_iterations: parseInt(maxIterations),
+        original_prompt: taskDescription,
+        check_command: checkCommand,
+        completion_type: completionChoice.value,
+        started_at: new Date().toISOString(),
+        last_check: null,
+        stuck_count: 0
+    };
+
+    fs.writeFileSync(statePath, JSON.stringify(initialState, null, 2));
+    currentState = initialState;
+    updateStatusBar();
+
+    // Inject the initial prompt
+    const initialPrompt = `${taskDescription}
+
+請開始執行。完成後執行以下命令來驗證：
+\`\`\`bash
+${checkCommand || '# AI 自行判斷完成狀態'}
+\`\`\`
+
+如果測試失敗，請修復並重試。`;
+
+    try {
+        await cdpManager.injectPrompt(initialPrompt);
+        vscode.window.showInformationMessage('🚀 迴圈已啟動！查看狀態欄監控進度。');
+    } catch (e) {
+        outputChannel.appendLine(`[Error] 無法注入提示: ${e.message}`);
+        vscode.window.showWarningMessage('迴圈已啟動，但無法自動注入提示。請手動輸入任務。');
+    }
 }
 
 /**
