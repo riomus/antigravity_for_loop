@@ -14,7 +14,8 @@ Module.prototype.require = function (request) {
                 showWarningMessage: () => Promise.resolve(),
                 showErrorMessage: () => Promise.resolve(),
                 showQuickPick: () => Promise.resolve(),
-                showInputBox: () => Promise.resolve()
+                showInputBox: () => Promise.resolve(),
+                registerWebviewViewProvider: () => ({ dispose: () => { } })
             },
             commands: {
                 registerCommand: () => ({ dispose: () => { } }),
@@ -30,7 +31,8 @@ Module.prototype.require = function (request) {
             StatusBarAlignment: { Right: 1 },
             ThemeColor: class { },
             QuickPickItemKind: { Separator: -1 },
-            Uri: { file: (path) => ({ fsPath: path }) }
+            Uri: { file: (path) => ({ fsPath: path }) },
+            ViewColumn: { One: 1 }
         };
     }
     return originalRequire.apply(this, arguments);
@@ -45,9 +47,9 @@ describe('Extension Test Suite', () => {
     });
 
     it('Extension should activate without error', () => {
-        const context = { subscriptions: [] };
+        const context = { subscriptions: [], extensionUri: { fsPath: '/test' } };
         extension.activate(context);
-        assert.strictEqual(context.subscriptions.length, 12); // Status bar + channel + commands
+        assert.strictEqual(context.subscriptions.length, 17); // Status bar + channel + 12 commands + 1 sidebar
     });
 });
 

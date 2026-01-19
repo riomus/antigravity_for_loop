@@ -100,7 +100,25 @@
                 "key": "ctrl+alt+shift+c",
                 "mac": "cmd+alt+shift+c"
             }
-        ]
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "antigravity-loop-sidebar",
+                    "title": "Antigravity Loop",
+                    "icon": "assets/icon.png"
+                }
+            ]
+        },
+        "views": {
+            "antigravity-loop-sidebar": [
+                {
+                    "type": "webview",
+                    "id": "antigravity.loopView",
+                    "name": "Loop Control"
+                }
+            ]
+        }
     },
     "scripts": {
         "test:shell": "shellspec --shell bash",

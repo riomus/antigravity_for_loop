@@ -14,6 +14,7 @@ const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
+const SidebarProvider = require('./lib/sidebar-provider');
 // Modules will be loaded dynamically in activate() to catch initialization errors
 
 // Global state
@@ -32,6 +33,90 @@ let relauncher = null;
 let CDPManager = null;
 let Relauncher = null;
 let RalphLoop = null;
+let sidebarProvider = null;
+
+
+// ... (existing code)
+
+/**
+ * Update the sidebar state
+ */
+function updateSidebarState() {
+    if (!sidebarProvider) return;
+
+    const state = readState();
+    const cdpEnabled = relauncher ? relauncher.isCDPEnabled() : false;
+
+    let loopStatus = 'Ready';
+    let iteration = 0;
+    let maxIterations = 0;
+
+    if (state) {
+        if (state.status === 'running') {
+            loopStatus = 'running';
+            iteration = state.iteration;
+            maxIterations = state.max_iterations;
+        } else if (state.status === 'completed') {
+            loopStatus = 'Done';
+            iteration = state.iteration;
+            maxIterations = state.max_iterations;
+        } else if (state.status === 'failed' || state.status === 'stuck') {
+            loopStatus = state.status === 'stuck' ? 'Stuck' : 'Failed';
+            iteration = state.iteration;
+            maxIterations = state.max_iterations;
+        }
+    }
+
+    sidebarProvider.updateState({
+        loopStatus,
+        iteration,
+        maxIterations,
+        continuationEnabled: continuationEnforcerEnabled,
+        cdpEnabled,
+        customInstructions: state ? state.custom_instructions : (currentState?.custom_instructions),
+        lastError: state ? state.last_error : (currentState?.last_error),
+        message: state ? state.message : (currentState?.message),
+        logs: state ? state.logs : (currentState?.logs)
+    });
+}
+
+/**
+ * Update the status bar based on current state
+ */
+function updateStatusBar() {
+    const state = readState();
+    currentState = state;
+
+    // Update sidebar as well
+    updateSidebarState();
+
+    // Determine auto-accept status icon
+    const autoAcceptIcon = autoAcceptEnabled ? '✅' : '⏸️';
+
+    if (!state) {
+        statusBarItem.text = `${autoAcceptIcon} For Loop: Off`;
+        statusBarItem.backgroundColor = autoAcceptEnabled
+            ? undefined
+            : new vscode.ThemeColor('statusBarItem.warningBackground');
+        statusBarItem.tooltip = autoAcceptEnabled
+            ? 'Auto-Accept ON | Click to manage'
+            : 'Click to start a fix loop';
+        return;
+    }
+    // ... (rest of updateStatusBar logic is implicitly preserved if I was smart, but I'm replacing the whole function or parts of it)
+    // Wait, I should not replace the whole file if I can avoid it, but here I am modifying global defs and a function in the middle.
+    // Use multi_replace or careful replace. 
+    // I entered this thinking I'd rewrite the function.
+
+    // Let's look at what I need to change:
+    // 1. Add `let sidebarProvider = null;` at top.
+    // 2. Add `updateSidebarState` function.
+    // 3. Call `updateSidebarState` inside `updateStatusBar`.
+    // 4. Update `activate` to assign `sidebarProvider` and register `refreshSidebar` command.
+}
+
+// ... existing code ...
+
 
 // Continuation Prompt Template
 const CONTINUATION_PROMPT_TEMPLATE = `[SYSTEM - LOOP CONTINUATION REQUIRED - ITERATION {{ITERATION}}/{{MAX}}]
@@ -59,7 +144,26 @@ function getStateFilePath() {
     if (!workspaceFolders || workspaceFolders.length === 0) {
         return null;
     }
-    return path.join(workspaceFolders[0].uri.fsPath, '.antigravity', 'for-loop-state.json');
+    const dotDir = path.join(workspaceFolders[0].uri.fsPath, '.antigravity');
+    if (!fs.existsSync(dotDir)) {
+        fs.mkdirSync(dotDir, { recursive: true });
+    }
+    return path.join(dotDir, 'for-loop-state.json');
+}
+
+/**
+ * Save state to file
+ */
+function saveState(state) {
+    const stateFile = getStateFilePath();
+    if (!stateFile) return;
+    try {
+        fs.writeFileSync(stateFile, JSON.stringify(state, null, 2));
+        currentState = state; // Update global in-memory state
+        updateSidebarState(); // Update UI
+    } catch (error) {
+        outputChannel.appendLine(`[Error] Failed to save state: ${error.message}`);
+    }
 }
 
 /**
@@ -171,6 +275,9 @@ function toggleAutoAccept() {
 function updateStatusBar() {
     const state = readState();
     currentState = state;
+
+    // Update sidebar as well
+    updateSidebarState();
 
     // Determine auto-accept status icon
     const autoAcceptIcon = autoAcceptEnabled ? '✅' : '⏸️';
@@ -1016,22 +1123,33 @@ async function startLoop() {
         completionPromise: 'DONE',
         taskDescription,
         workspacePath,
+        customInstructions: currentState?.custom_instructions, // Pass custom prompt
         onProgress: (progress) => {
             // Update status bar with progress
-            currentState = {
+            const newState = {
+                ...currentState,
                 status: 'running',
                 iteration: progress.iteration,
-                max_iterations: progress.maxIterations
+                max_iterations: progress.maxIterations,
+                last_error: progress.lastError,
+                message: progress.message,
+                logs: progress.logs
             };
+            saveState(newState);
             updateStatusBar();
         },
         onComplete: (result) => {
             // Update status bar when done
-            currentState = {
+            const newState = {
+                ...currentState,
                 status: result.success ? 'done' : 'failed',
                 iteration: result.iterations,
-                max_iterations: result.maxIterations
+                max_iterations: result.maxIterations,
+                last_error: !result.success ? result.message : null,
+                message: result.message,
+                logs: result.logs
             };
+            saveState(newState);
             updateStatusBar();
 
             // Show notification
@@ -1043,12 +1161,16 @@ async function startLoop() {
         }
     });
 
-    // Update status bar to show running
-    currentState = {
+    const newState = {
         status: 'running',
         iteration: 1,
-        max_iterations: maxIterations
+        max_iterations: maxIterations,
+        original_prompt: taskDescription,
+        test_command: checkCommand,
+        started_at: new Date().toISOString(),
+        custom_instructions: currentState?.custom_instructions // Preserve prompt settings
     };
+    saveState(newState);
     updateStatusBar();
 
     // Start the loop (async)
@@ -1056,6 +1178,11 @@ async function startLoop() {
     currentRalphLoop.start().catch(e => {
         outputChannel.appendLine(`[Error] Loop failed: ${e.message}`);
         vscode.window.showErrorMessage(`Loop execution failed: ${e.message}`);
+
+        // Update state on failure
+        const failState = { ...newState, status: 'failed' };
+        saveState(failState);
+        updateStatusBar();
     });
 }
 
@@ -1084,6 +1211,47 @@ async function cancelLoop() {
 
     vscode.window.showInformationMessage('Loop cancelled.');
 }
+
+/**
+ * Pause the loop
+ */
+async function pauseLoop() {
+    if (!currentRalphLoop || !currentRalphLoop.isRunning) {
+        return;
+    }
+
+    if (currentRalphLoop.pause()) {
+        const state = readState();
+        if (state) {
+            state.status = 'paused';
+            state.message = 'Loop paused';
+            saveState(state);
+            updateStatusBar();
+            vscode.window.showInformationMessage('Loop paused');
+        }
+    }
+}
+
+/**
+ * Resume the loop
+ */
+async function resumeLoop() {
+    if (!currentRalphLoop || !currentRalphLoop.isRunning) {
+        return;
+    }
+
+    if (currentRalphLoop.resume()) {
+        const state = readState();
+        if (state) {
+            state.status = 'running';
+            state.message = 'Loop resuming...';
+            saveState(state);
+            updateStatusBar();
+            vscode.window.showInformationMessage('Loop resumed');
+        }
+    }
+}
+
 
 /**
  * Show detailed status
@@ -1212,6 +1380,19 @@ async function enableCDP() {
 }
 
 /**
+ * Update the custom prompt instructions
+ */
+function updateCustomPrompt(prompt) {
+    let state = readState() || {};
+    state.custom_instructions = prompt;
+    saveState(state);
+    outputChannel.appendLine(`[Prompt] Custom instructions updated: ${prompt.substring(0, 50)}...`);
+    vscode.window.setStatusBarMessage('Antigravity: Custom instructions saved', 3000);
+}
+
+// ... existing code ...
+
+/**
  * Activate the extension
  */
 function activate(context) {
@@ -1321,11 +1502,29 @@ function activate(context) {
             outputChannel.appendLine(`[Error] Failed to create status bar item: ${e.message}`);
         }
 
+        // Register Sidebar Provider
+        try {
+            sidebarProvider = new SidebarProvider(context.extensionUri);
+            context.subscriptions.push(
+                vscode.window.registerWebviewViewProvider(
+                    "antigravity.loopView",
+                    sidebarProvider
+                )
+            );
+            outputChannel.appendLine('[Init] Sidebar provider registered');
+        } catch (e) {
+            console.error('Failed to register sidebar provider:', e);
+            outputChannel.appendLine(`[Error] Failed to register sidebar provider: ${e.message}`);
+        }
+
+
         // Register commands
         outputChannel.appendLine('[Init] Registering commands...');
         const commands = [
             { id: 'antigravity-for-loop.start', handler: startLoop },
             { id: 'antigravity-for-loop.cancel', handler: cancelLoop },
+            { id: 'antigravity-for-loop.pause', handler: pauseLoop },
+            { id: 'antigravity-for-loop.resume', handler: resumeLoop },
             { id: 'antigravity-for-loop.showMenu', handler: showQuickPick },
             { id: 'antigravity-for-loop.showLogs', handler: () => outputChannel.show() },
             { id: 'antigravity-for-loop.toggleAutoAccept', handler: toggleAutoAccept },
@@ -1333,7 +1532,9 @@ function activate(context) {
             { id: 'antigravity-for-loop.toggleContinuation', handler: toggleContinuationEnforcer },
             { id: 'antigravity-for-loop.copyPrompt', handler: copyContinuationPrompt },
             { id: 'antigravity-for-loop.debugCDP', handler: debugCDP },
-            { id: 'antigravity-for-loop.enableCDP', handler: enableCDP }
+            { id: 'antigravity-for-loop.enableCDP', handler: enableCDP },
+            { id: 'antigravity-for-loop.refreshSidebar', handler: updateSidebarState },
+            { id: 'antigravity-for-loop.updatePrompt', handler: updateCustomPrompt }
         ];
 
         commands.forEach(cmd => {
