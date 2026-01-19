@@ -11,7 +11,7 @@
         "url": "https://github.com/iml1s/antigravity_for_loop"
     },
     "engines": {
-        "vscode": "^1.107.0"
+        "vscode": "^1.90.0"
     },
     "categories": [
         "Other",
@@ -27,7 +27,9 @@
         "status-bar"
     ],
     "activationEvents": [
-        "onStartupFinished"
+        "onStartupFinished",
+        "onCommand:antigravity-for-loop.showMenu",
+        "onCommand:antigravity-for-loop.start"
     ],
     "main": "./extension.js",
     "contributes": {
@@ -123,7 +125,7 @@
         "@mshanemc/vscode-test-playwright": "^0.0.1-beta14",
         "@playwright/test": "^1.57.0",
         "@types/mocha": "^10.0.10",
-        "@types/vscode": "^1.107.0",
+        "@types/vscode": "^1.90.0",
         "@vscode/test-cli": "^0.0.12",
         "@vscode/test-electron": "^2.5.2",
         "@wdio/cli": "^8.46.0",

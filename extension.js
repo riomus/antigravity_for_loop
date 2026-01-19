@@ -14,9 +14,7 @@ const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
-const { CDPManager } = require('./lib/cdp-manager');
-const { Relauncher } = require('./lib/relauncher');
-const { RalphLoop } = require('./lib/ralph-loop');
+// Modules will be loaded dynamically in activate() to catch initialization errors
 
 // Global state
 let statusBarItem;
@@ -31,6 +29,9 @@ let lastCheckResult = null;
 let continuationEnforcerEnabled = true;
 let cdpManager = null;
 let relauncher = null;
+let CDPManager = null;
+let Relauncher = null;
+let RalphLoop = null;
 
 // Continuation Prompt Template
 const CONTINUATION_PROMPT_TEMPLATE = `[SYSTEM - LOOP CONTINUATION REQUIRED - ITERATION {{ITERATION}}/{{MAX}}]
@@ -887,6 +888,10 @@ function detectAllCommands(workspacePath) {
  * - Re-inject prompt on each iteration with error context
  */
 async function startLoop() {
+    if (!RalphLoop) {
+        vscode.window.showErrorMessage('Antigravity For Loop: Required modules failed to load. Please restart VS Code or check output logs.');
+        return;
+    }
     // Check if loop already running
     if (currentRalphLoop && currentRalphLoop.isRunning) {
         vscode.window.showWarningMessage('A loop is already running. Cancel it first to start a new one.');
@@ -1210,92 +1215,157 @@ async function enableCDP() {
  * Activate the extension
  */
 function activate(context) {
-    console.log('Antigravity For Loop extension activated');
+    console.log('Antigravity For Loop extension: activating...');
 
-    // Create output channel
-    outputChannel = vscode.window.createOutputChannel('Antigravity For Loop');
-    outputChannel.appendLine('[Init] Extension activated');
-    outputChannel.appendLine('[Info] Auto-Accept uses: antigravity.agent.acceptAgentStep, antigravity.terminal.accept');
+    try {
+        // Create output channel
+        outputChannel = vscode.window.createOutputChannel('Antigravity For Loop');
+        outputChannel.appendLine('[Init] Extension activating...');
+        outputChannel.appendLine('[Info] Auto-Accept uses: antigravity.agent.acceptAgentStep, antigravity.terminal.accept');
 
-    // Initialize CDP Manager for direct webview injection
-    cdpManager = new CDPManager({
-        log: (msg) => outputChannel.appendLine(msg)
-    });
-    outputChannel.appendLine('[Init] CDP Manager initialized (ports 9000-9003)');
+        // Dynamic imports to catch load errors
+        // Dynamic imports to catch load errors
+        try {
+            // Use explicit assignment to avoid any destructuring quirks
+            const cdpModule = require('./lib/cdp-manager');
+            CDPManager = cdpModule.CDPManager;
 
-    // Initialize Relauncher for CDP setup
-    relauncher = new Relauncher({
-        log: (msg) => outputChannel.appendLine(msg)
-    });
+            const relauncherModule = require('./lib/relauncher');
+            Relauncher = relauncherModule.Relauncher;
 
-    // Check if CDP is enabled and prompt user if not
-    if (relauncher.isCDPEnabled()) {
-        outputChannel.appendLine('[Init] CDP flag detected in process args');
+            const ralphModule = require('./lib/ralph-loop');
+            RalphLoop = ralphModule.RalphLoop;
 
-        // Try to connect to CDP on startup (non-blocking)
-        cdpManager.tryConnect().then(connected => {
-            if (connected) {
-                outputChannel.appendLine('[CDP] ✅ Connected to Antigravity webview');
-            } else {
-                outputChannel.appendLine('[CDP] ⚠️ Could not connect - will retry on injection');
+            outputChannel.appendLine('[Init] Modules loaded successfully');
+        } catch (e) {
+            console.error('Failed to load modules:', e);
+            outputChannel.appendLine(`[CRITICAL] Failed to load required modules: ${e.message}`);
+            vscode.window.showErrorMessage(`Antigravity Module Load Error: ${e.message}`);
+            return; // Stop activation if modules cannot be loaded
+        }
+
+        // Initialize CDP Manager for direct webview injection
+        try {
+            cdpManager = new CDPManager({
+                log: (msg) => outputChannel.appendLine(msg)
+            });
+            outputChannel.appendLine('[Init] CDP Manager initialized (ports 9000-9003)');
+        } catch (e) {
+            console.error('Failed to initialize CDP Manager:', e);
+            outputChannel.appendLine(`[Error] Failed to initialize CDP Manager: ${e.message}`);
+        }
+
+        // Initialize Relauncher for CDP setup
+        try {
+            relauncher = new Relauncher({
+                log: (msg) => outputChannel.appendLine(msg)
+            });
+        } catch (e) {
+            console.error('Failed to initialize Relauncher:', e);
+            outputChannel.appendLine(`[Error] Failed to initialize Relauncher: ${e.message}`);
+        }
+
+        // Check if CDP is enabled and prompt user if not
+        if (relauncher && relauncher.isCDPEnabled()) {
+            outputChannel.appendLine('[Init] CDP flag detected in process args');
+
+            // Try to connect to CDP on startup (non-blocking)
+            if (cdpManager) {
+                cdpManager.tryConnect().then(connected => {
+                    if (connected) {
+                        outputChannel.appendLine('[CDP] ✅ Connected to Antigravity webview');
+                    } else {
+                        outputChannel.appendLine('[CDP] ⚠️ Could not connect - will retry on injection');
+                    }
+                }).catch(() => { });
             }
-        }).catch(() => {});
-    } else {
-        outputChannel.appendLine('[Init] ⚠️ CDP not enabled - auto-injection will require manual setup');
+        } else {
+            outputChannel.appendLine('[Init] ⚠️ CDP not enabled - auto-injection will require manual setup');
 
-        // Show a notification with action button
-        vscode.window.showWarningMessage(
-            'Antigravity For Loop: CDP not enabled. Auto-Accept and prompt injection require CDP.',
-            'Enable CDP',
-            'Learn More',
-            'Dismiss'
-        ).then(choice => {
-            if (choice === 'Enable CDP') {
-                enableCDP();
-            } else if (choice === 'Learn More') {
-                outputChannel.show();
-                outputChannel.appendLine('\n=== CDP Setup Instructions ===');
-                outputChannel.appendLine('CDP (Chrome DevTools Protocol) allows the extension to:');
-                outputChannel.appendLine('  - Automatically click Accept buttons');
-                outputChannel.appendLine('  - Inject prompts directly into chat');
-                outputChannel.appendLine('  - Submit messages programmatically');
-                outputChannel.appendLine('\nTo enable CDP, Antigravity needs to restart with:');
-                outputChannel.appendLine('  --remote-debugging-port=9000');
-                outputChannel.appendLine('\nClick "Enable CDP" in the For Loop menu to set this up.');
-                outputChannel.appendLine('================================\n');
+            // Show a notification with action button
+            vscode.window.showWarningMessage(
+                'Antigravity For Loop: CDP not enabled. Auto-Accept and prompt injection require CDP.',
+                'Enable CDP',
+                'Learn More',
+                'Dismiss'
+            ).then(choice => {
+                if (choice === 'Enable CDP') {
+                    enableCDP();
+                } else if (choice === 'Learn More') {
+                    outputChannel.show();
+                    outputChannel.appendLine('\n=== CDP Setup Instructions ===');
+                    outputChannel.appendLine('CDP (Chrome DevTools Protocol) allows the extension to:');
+                    outputChannel.appendLine('  - Automatically click Accept buttons');
+                    outputChannel.appendLine('  - Inject prompts directly into chat');
+                    outputChannel.appendLine('  - Submit messages programmatically');
+                    outputChannel.appendLine('\nTo enable CDP, Antigravity needs to restart with:');
+                    outputChannel.appendLine('  --remote-debugging-port=9000');
+                    outputChannel.appendLine('\nClick "Enable CDP" in the For Loop menu to set this up.');
+                    outputChannel.appendLine('================================\n');
+                }
+            });
+        }
+
+        // Create status bar item (high priority to be visible)
+        try {
+            outputChannel.appendLine('[Init] Creating status bar item...');
+            statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 10000);
+            statusBarItem.command = 'antigravity-for-loop.showMenu';
+            statusBarItem.text = '⏸️ For Loop: Off';
+            statusBarItem.tooltip = 'Click to manage fix loop';
+            statusBarItem.show();
+            outputChannel.appendLine('[Init] Status bar item created and shown');
+            context.subscriptions.push(statusBarItem);
+        } catch (e) {
+            console.error('Failed to create status bar item:', e);
+            outputChannel.appendLine(`[Error] Failed to create status bar item: ${e.message}`);
+        }
+
+        // Register commands
+        outputChannel.appendLine('[Init] Registering commands...');
+        const commands = [
+            { id: 'antigravity-for-loop.start', handler: startLoop },
+            { id: 'antigravity-for-loop.cancel', handler: cancelLoop },
+            { id: 'antigravity-for-loop.showMenu', handler: showQuickPick },
+            { id: 'antigravity-for-loop.showLogs', handler: () => outputChannel.show() },
+            { id: 'antigravity-for-loop.toggleAutoAccept', handler: toggleAutoAccept },
+            { id: 'antigravity-for-loop.runCheck', handler: runCheckScript },
+            { id: 'antigravity-for-loop.toggleContinuation', handler: toggleContinuationEnforcer },
+            { id: 'antigravity-for-loop.copyPrompt', handler: copyContinuationPrompt },
+            { id: 'antigravity-for-loop.debugCDP', handler: debugCDP },
+            { id: 'antigravity-for-loop.enableCDP', handler: enableCDP }
+        ];
+
+        commands.forEach(cmd => {
+            try {
+                context.subscriptions.push(vscode.commands.registerCommand(cmd.id, cmd.handler));
+                outputChannel.appendLine(`[Init] Registered command: ${cmd.id}`);
+            } catch (e) {
+                console.error(`Failed to register command ${cmd.id}:`, e);
+                outputChannel.appendLine(`[Error] Failed to register command ${cmd.id}: ${e.message}`);
             }
         });
+
+        // Start polling for state changes
+        statePollingInterval = setInterval(updateStatusBar, 1000);
+
+        // Initial status update
+        updateStatusBar();
+
+        context.subscriptions.push(outputChannel);
+
+        console.log('Antigravity For Loop extension activated successfully');
+        outputChannel.appendLine('[Init] Extension activation complete');
+
+    } catch (error) {
+        console.error('Antigravity For Loop extension activation FAILED:', error);
+        if (outputChannel) {
+            outputChannel.appendLine(`[CRITICAL] Extension activation FAILED: ${error.message}`);
+            outputChannel.appendLine(error.stack);
+            outputChannel.show();
+        }
+        vscode.window.showErrorMessage(`Antigravity For Loop failed to activate: ${error.message}`);
     }
-
-    // Create status bar item (high priority to be visible)
-    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 10000);
-    statusBarItem.command = 'antigravity-for-loop.showMenu';
-    statusBarItem.text = '⏸️ For Loop: Off';
-    statusBarItem.tooltip = 'Click to manage fix loop';
-    statusBarItem.show();
-
-    // Register commands
-    context.subscriptions.push(
-        vscode.commands.registerCommand('antigravity-for-loop.start', startLoop),
-        vscode.commands.registerCommand('antigravity-for-loop.cancel', cancelLoop),
-        vscode.commands.registerCommand('antigravity-for-loop.showMenu', showQuickPick),
-        vscode.commands.registerCommand('antigravity-for-loop.showLogs', () => outputChannel.show()),
-        vscode.commands.registerCommand('antigravity-for-loop.toggleAutoAccept', toggleAutoAccept),
-        vscode.commands.registerCommand('antigravity-for-loop.runCheck', runCheckScript),
-        vscode.commands.registerCommand('antigravity-for-loop.toggleContinuation', toggleContinuationEnforcer),
-        vscode.commands.registerCommand('antigravity-for-loop.copyPrompt', copyContinuationPrompt),
-        vscode.commands.registerCommand('antigravity-for-loop.debugCDP', debugCDP),
-        vscode.commands.registerCommand('antigravity-for-loop.enableCDP', enableCDP)
-    );
-
-    // Start polling for state changes
-    statePollingInterval = setInterval(updateStatusBar, 1000);
-
-    // Initial status update
-    updateStatusBar();
-
-    context.subscriptions.push(statusBarItem);
-    context.subscriptions.push(outputChannel);
 }
 
 /**

@@ -20,7 +20,7 @@ spec/
 wdio.conf.js
 
 # Build tools
-node_modules/
+
 *.vsix
 
 # Documentation (internal)
