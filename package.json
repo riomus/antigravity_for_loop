@@ -105,13 +105,7 @@
     "scripts": {
         "test:shell": "shellspec --shell bash",
         "test:unit": "mocha test/unit/**/*.test.js --timeout 10000",
-        "test:unit:detect": "mocha test/unit/detectTestCommand.test.js --timeout 10000",
-        "test:unit:ralph": "mocha test/unit/ralphLoop.test.js --timeout 10000",
-        "test:unit:cdp": "mocha test/unit/cdpManager.test.js --timeout 10000",
-        "test:unit:state": "mocha test/unit/stateParser.test.js",
         "test:integration": "npx @vscode/test-cli",
-        "test:e2e": "npx @vscode/test-cli --label e2e",
-        "test:e2e:cdp": "node test/e2e/cdp-ralph-loop.e2e.js",
         "test": "npm run test:unit",
         "test:all": "npm run test:shell && npm run test:unit",
         "test:coverage": "nyc npm run test:unit",
