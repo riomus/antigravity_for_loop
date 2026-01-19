@@ -1355,6 +1355,7 @@ function activate(context) {
         context.subscriptions.push(outputChannel);
 
         console.log('Antigravity For Loop extension activated successfully');
+        console.log('done');
         outputChannel.appendLine('[Init] Extension activation complete');
 
     } catch (error) {
