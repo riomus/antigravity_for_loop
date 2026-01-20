@@ -35,6 +35,36 @@ Module.prototype.require = function (request) {
             ViewColumn: { One: 1 }
         };
     }
+    if (request.includes('cdp-manager')) {
+        return {
+            CDPManager: class {
+                constructor() { }
+                tryConnect() { return Promise.resolve(false); }
+            }
+        };
+    }
+    if (request.includes('relauncher')) {
+        return {
+            Relauncher: class {
+                constructor() { }
+                isCDPEnabled() { return false; }
+            }
+        };
+    }
+    if (request.includes('ralph-loop')) {
+        return {
+            RalphLoop: class {
+                constructor() { }
+                static get DEFAULT_PROMPT_TEMPLATE() { return 'DEFAULT'; }
+            }
+        };
+    }
+    if (request.includes('sidebar-provider')) {
+        return class SidebarProvider {
+            constructor() { }
+            updateState() { }
+        };
+    }
     return originalRequire.apply(this, arguments);
 };
 
@@ -49,7 +79,11 @@ describe('Extension Test Suite', () => {
     it('Extension should activate without error', () => {
         const context = { subscriptions: [], extensionUri: { fsPath: '/test' } };
         extension.activate(context);
-        assert.strictEqual(context.subscriptions.length, 17); // Status bar + channel + 12 commands + 1 sidebar
+        assert.strictEqual(context.subscriptions.length, 18); // Status bar + channel + 15 commands + 1 sidebar
+    });
+
+    after(() => {
+        Module.prototype.require = originalRequire;
     });
 });
 

@@ -74,8 +74,14 @@ function updateSidebarState() {
         continuationEnabled: continuationEnforcerEnabled,
         cdpEnabled,
         customInstructions: state ? state.custom_instructions : (currentState?.custom_instructions),
+        promptTemplate: (state && state.prompt_template) || (currentState && currentState.prompt_template) || (RalphLoop ? RalphLoop.DEFAULT_PROMPT_TEMPLATE : ''),
+        lastError: state ? state.last_error : (currentState?.last_error),
         lastError: state ? state.last_error : (currentState?.last_error),
         message: state ? state.message : (currentState?.message),
+        message: state ? state.message : (currentState?.message),
+        quotaCheckEnabled: state ? state.quota_check_enabled : (currentState?.quota_check_enabled !== false),
+        quotaCheckInterval: state ? state.quota_check_interval : (currentState?.quota_check_interval || 60000),
+        quotaDefaultWait: state ? state.quota_default_wait : (currentState?.quota_default_wait || 30 * 60000),
         logs: state ? state.logs : (currentState?.logs)
     });
 }
@@ -149,6 +155,19 @@ function getStateFilePath() {
         fs.mkdirSync(dotDir, { recursive: true });
     }
     return path.join(dotDir, 'for-loop-state.json');
+}
+
+/**
+ * Check for stale state on startup and reset if necessary
+ */
+function resetStaleState() {
+    const state = readState();
+    if (state && (state.status === 'running' || state.status === 'paused')) {
+        state.status = 'failed';
+        state.message = 'Loop stopped unexpectedly (window reload?)';
+        state.last_error = 'Session interrupted';
+        saveState(state);
+    }
 }
 
 /**
@@ -308,16 +327,16 @@ function updateStatusBar() {
             stopAutoAcceptLoop();
             outputChannel.appendLine('[Auto-Accept] Disabled - loop completed');
         }
-    } else if (state.status === 'failed' || state.status === 'stuck') {
-        statusBarItem.text = `$(error) Loop: ${state.status === 'stuck' ? 'Stuck' : 'Failed'}`;
+    } else if (state.status === 'failed' || state.status === 'stuck' || state.status === 'cancelled') {
+        statusBarItem.text = `$(error) Loop: ${state.status === 'stuck' ? 'Stuck' : (state.status === 'cancelled' ? 'Cancelled' : 'Failed')}`;
         statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
-        statusBarItem.tooltip = `Failed at iteration ${iteration}`;
+        statusBarItem.tooltip = `Ended at iteration ${iteration}`;
 
-        // Auto-disable auto-accept when loop fails
+        // Auto-disable auto-accept when loop fails or is cancelled
         if (autoAcceptEnabled) {
             autoAcceptEnabled = false;
             stopAutoAcceptLoop();
-            outputChannel.appendLine('[Auto-Accept] Disabled - loop failed/stuck');
+            outputChannel.appendLine(`[Auto-Accept] Disabled - loop ${state.status}`);
         }
     } else {
         // Running
@@ -437,7 +456,7 @@ async function showQuickPick() {
         case 'start-full':
             autoAcceptEnabled = true;
             continuationEnforcerEnabled = true;
-            startAutoAcceptLoop();
+            // startAutoAcceptLoop(); // RalphLoop handles this internally
             await startLoop();
             vscode.window.showInformationMessage('🚀 Full loop started: Auto-Accept + Continuation Enforcer enabled');
             break;
@@ -994,7 +1013,7 @@ function detectAllCommands(workspacePath) {
  * - Auto-accept all agent steps
  * - Re-inject prompt on each iteration with error context
  */
-async function startLoop() {
+async function startLoop(options = {}) {
     if (!RalphLoop) {
         vscode.window.showErrorMessage('Antigravity For Loop: Required modules failed to load. Please restart VS Code or check output logs.');
         return;
@@ -1015,11 +1034,16 @@ async function startLoop() {
     const detectedCmd = detectTestCommand(workspacePath);
 
     // Step 1: Task description
-    const taskDescription = await vscode.window.showInputBox({
-        prompt: 'Describe your task',
-        placeHolder: 'e.g., Fix all TypeScript errors',
-        ignoreFocusOut: true
-    });
+    // If options provided task, use it (future proofing), else ask
+    let taskDescription = options.taskDescription;
+
+    if (!taskDescription) {
+        taskDescription = await vscode.window.showInputBox({
+            prompt: 'Describe your task',
+            placeHolder: 'e.g., Fix all TypeScript errors',
+            ignoreFocusOut: true
+        });
+    }
 
     if (!taskDescription) return;
 
@@ -1049,6 +1073,12 @@ async function startLoop() {
             command: null
         },
         {
+            label: '$(comment-discussion) Prompt Check',
+            description: 'Run a verification prompt to check results',
+            value: 'prompt',
+            command: null
+        },
+        {
             label: '$(terminal) Custom Command...',
             description: 'Enter a custom validation command',
             value: 'custom',
@@ -1073,6 +1103,27 @@ async function startLoop() {
             ignoreFocusOut: true
         });
         if (!checkCommand) return;
+    }
+
+    // If Prompt Check, ask for prompt and keyword
+    let checkPrompt = null;
+    let successKeyword = 'PASS';
+
+    if (completionChoice.value === 'prompt') {
+        checkPrompt = await vscode.window.showInputBox({
+            prompt: 'Enter the verification prompt',
+            placeHolder: 'e.g., Check the file X. If it exists and has content Y, say PASS.',
+            ignoreFocusOut: true
+        });
+        if (!checkPrompt) return;
+
+        const keywordInput = await vscode.window.showInputBox({
+            prompt: 'Enter the success keyword to look for',
+            placeHolder: 'PASS',
+            value: 'PASS',
+            ignoreFocusOut: true
+        });
+        if (keywordInput) successKeyword = keywordInput;
     }
 
     // If test mode but no command detected, ask for it
@@ -1123,7 +1174,17 @@ async function startLoop() {
         completionPromise: 'DONE',
         taskDescription,
         workspacePath,
+
+        checkPrompt, // New option
+        successKeyword, // New option
+
+        // Quota Handling (from options or default to true)
+        quotaCheckEnabled: options.quotaCheckEnabled !== false,
+        quotaCheckInterval: options.quotaCheckInterval || 60000,
+        quotaDefaultWait: options.quotaDefaultWait || 30 * 60000,
+
         customInstructions: currentState?.custom_instructions, // Pass custom prompt
+        promptTemplate: currentState?.prompt_template, // Pass custom template
         onProgress: (progress) => {
             // Update status bar with progress
             const newState = {
@@ -1167,8 +1228,14 @@ async function startLoop() {
         max_iterations: maxIterations,
         original_prompt: taskDescription,
         test_command: checkCommand,
+        check_prompt: checkPrompt, // Persist
+        success_keyword: successKeyword, // Persist
+        quota_check_enabled: options.quotaCheckEnabled !== false, // Persist
+        quota_check_interval: options.quotaCheckInterval || 60000,
+        quota_default_wait: options.quotaDefaultWait || 30 * 60000,
         started_at: new Date().toISOString(),
-        custom_instructions: currentState?.custom_instructions // Preserve prompt settings
+        custom_instructions: currentState?.custom_instructions, // Preserve prompt settings
+        prompt_template: currentState?.prompt_template // Preserve template
     };
     saveState(newState);
     updateStatusBar();
@@ -1390,6 +1457,30 @@ function updateCustomPrompt(prompt) {
     vscode.window.setStatusBarMessage('Antigravity: Custom instructions saved', 3000);
 }
 
+/**
+ * Update the prompt template
+ */
+function updatePromptTemplate(template) {
+    let state = readState() || {};
+    state.prompt_template = template;
+    saveState(state);
+    outputChannel.appendLine('[Prompt] Template updated');
+    vscode.window.setStatusBarMessage('Antigravity: Loop template saved', 3000);
+}
+
+/**
+ * Reset prompt template to default
+ */
+function resetPromptTemplate() {
+    let state = readState() || {};
+    state.prompt_template = RalphLoop.DEFAULT_PROMPT_TEMPLATE; // Will be undefined/null effectively in usage or explicit string?
+    // Actually, let's delete the key so it falls back to default in Sidebar and RalphLoop
+    delete state.prompt_template;
+    saveState(state);
+    outputChannel.appendLine('[Prompt] Template reset to default');
+    vscode.window.setStatusBarMessage('Antigravity: Loop template reset', 3000);
+}
+
 // ... existing code ...
 
 /**
@@ -1533,8 +1624,11 @@ function activate(context) {
             { id: 'antigravity-for-loop.copyPrompt', handler: copyContinuationPrompt },
             { id: 'antigravity-for-loop.debugCDP', handler: debugCDP },
             { id: 'antigravity-for-loop.enableCDP', handler: enableCDP },
+
             { id: 'antigravity-for-loop.refreshSidebar', handler: updateSidebarState },
-            { id: 'antigravity-for-loop.updatePrompt', handler: updateCustomPrompt }
+            { id: 'antigravity-for-loop.updatePrompt', handler: updateCustomPrompt },
+            { id: 'antigravity-for-loop.updatePromptTemplate', handler: updatePromptTemplate },
+            { id: 'antigravity-for-loop.resetPromptTemplate', handler: resetPromptTemplate }
         ];
 
         commands.forEach(cmd => {
@@ -1549,6 +1643,9 @@ function activate(context) {
 
         // Start polling for state changes
         statePollingInterval = setInterval(updateStatusBar, 1000);
+
+        // Check for stale state
+        resetStaleState();
 
         // Initial status update
         updateStatusBar();

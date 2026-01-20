@@ -16,3 +16,16 @@ Add status and infos to the file- to sum up what was done and what is left to do
     [x]  add possibility to stop the loop
     [x]  add possibility to pause the loop 
     [x] show progress bar of the loop with current iteration and max iterations + logs
+    [x] add possibility to change all prompts (Ralph Loop templates)
+        [x] Update RalphLoop.js to support prompt templates
+        [x] Update SidebarProvider.js to add prompt template editor
+        [x] Update extension.js to persist and pass prompt templates
+    [x] Fix Loop UI logic
+        [x] Hide Start button when running
+        [x] Disable/Hide Pause/Resume when not running
+        [x] Color progress bar based on status (Red/Green)
+    [x] Add Model Quota Limit Handling
+        [x] Add detection for "Model quota limit exceeded" error
+        [x] Parse resumption date from error message
+        [x] Implement wait loop in RalphLoop
+        [x] Add configuration UI in Sidebar
