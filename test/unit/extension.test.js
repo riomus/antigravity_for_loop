@@ -1,41 +1,12 @@
 
+
 const assert = require('assert');
 const Module = require('module');
 const originalRequire = Module.prototype.require;
 
-// Mock vscode module
+// Override specific modules that need custom behavior for this test
+const customRequireOverride = Module.prototype.require;
 Module.prototype.require = function (request) {
-    if (request === 'vscode') {
-        return {
-            window: {
-                createOutputChannel: () => ({ appendLine: () => { }, show: () => { } }),
-                createStatusBarItem: () => ({ show: () => { } }),
-                showInformationMessage: () => Promise.resolve(),
-                showWarningMessage: () => Promise.resolve(),
-                showErrorMessage: () => Promise.resolve(),
-                showQuickPick: () => Promise.resolve(),
-                showInputBox: () => Promise.resolve(),
-                registerWebviewViewProvider: () => ({ dispose: () => { } })
-            },
-            commands: {
-                registerCommand: () => ({ dispose: () => { } }),
-                executeCommand: () => Promise.resolve()
-            },
-            workspace: {
-                workspaceFolders: [],
-                getConfiguration: () => ({ get: () => null })
-            },
-            env: {
-                clipboard: { writeText: () => Promise.resolve() },
-                appName: 'VS Code'
-            },
-            StatusBarAlignment: { Right: 1 },
-            ThemeColor: class { },
-            QuickPickItemKind: { Separator: -1 },
-            Uri: { file: (path) => ({ fsPath: path }) },
-            ViewColumn: { One: 1 }
-        };
-    }
     if (request.includes('cdp-manager')) {
         return {
             CDPManager: class {
@@ -55,8 +26,17 @@ Module.prototype.require = function (request) {
     if (request.includes('ralph-loop')) {
         return {
             RalphLoop: class {
-                constructor() { }
+                constructor() {
+                    this.isRunning = false;
+                    this.isPaused = false;
+                    this.currentIteration = 0;
+                }
                 static get DEFAULT_PROMPT_TEMPLATE() { return 'DEFAULT'; }
+                async start() { return { success: true }; }
+                pause() { return true; }
+                resume() { return true; }
+                cancel() { }
+                getStatus() { return { isRunning: false }; }
             }
         };
     }
@@ -66,7 +46,7 @@ Module.prototype.require = function (request) {
             updateState() { }
         };
     }
-    return originalRequire.apply(this, arguments);
+    return customRequireOverride.apply(this, arguments);
 };
 
 const extension = require('../../extension');

@@ -1,4 +1,5 @@
 
+
 const assert = require('assert');
 const Module = require('module');
 const originalRequire = Module.prototype.require;
@@ -6,28 +7,9 @@ const originalRequire = Module.prototype.require;
 let mockUpdateState = null;
 let savedState = null;
 
-// Mock modules
+// Override specific modules that need custom behavior for this test
+const customRequireOverride = Module.prototype.require;
 Module.prototype.require = function (request) {
-    if (request === 'vscode') {
-        return {
-            window: {
-                createOutputChannel: () => ({ appendLine: () => { }, show: () => { } }),
-                createStatusBarItem: () => ({ show: () => { } }),
-                registerWebviewViewProvider: () => ({ dispose: () => { } }),
-                showWarningMessage: () => Promise.resolve(),
-                showErrorMessage: () => Promise.resolve(),
-                showInformationMessage: () => Promise.resolve()
-            },
-            commands: { registerCommand: () => ({ dispose: () => { } }) },
-            workspace: {
-                workspaceFolders: [{ uri: { fsPath: '/tmp' } }],
-                getConfiguration: () => ({ get: () => null })
-            },
-            StatusBarAlignment: { Right: 1 },
-            ThemeColor: class { },
-            Uri: { file: (p) => ({ fsPath: p }) }
-        };
-    }
     if (request === 'fs') {
         return {
             existsSync: (path) => true,
@@ -73,7 +55,7 @@ Module.prototype.require = function (request) {
         };
     }
 
-    return originalRequire.apply(this, arguments);
+    return customRequireOverride.apply(this, arguments);
 };
 
 const extension = require('../../extension');

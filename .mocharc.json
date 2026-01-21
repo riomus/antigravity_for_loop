@@ -1,0 +1,6 @@
+{
+    "require": [
+        "test/unit/hooks.js"
+    ],
+    "timeout": 10000
+}

@@ -1,14 +1,14 @@
 {
-    "name": "antigravity-for-loop",
-    "displayName": "Antigravity For Loop",
-    "description": "自動迭代修復循環插件：讓 AI 代理持續執行開發任務直到通過所有測試或達到迭代上限。",
-    "version": "0.2.1",
-    "publisher": "iml1s",
+    "name": "antigravity-ralph-loops",
+    "displayName": "Antigravity Ralph Loop",
+    "description": "Ralph Wiggam loops for Antigravity - using CDP to automate runs",
+    "version": "0.0.1",
+    "publisher": "riomus",
     "license": "MIT",
-    "icon": "assets/icon.png",
+    "icon": "assets/icon.ico",
     "repository": {
         "type": "git",
-        "url": "https://github.com/iml1s/antigravity_for_loop"
+        "url": "https://github.com/riomus/antigravity_for_loop"
     },
     "engines": {
         "vscode": "^1.90.0"
@@ -106,7 +106,7 @@
                 {
                     "id": "antigravity-loop-sidebar",
                     "title": "Antigravity Loop",
-                    "icon": "assets/icon.png"
+                    "icon": "assets/icon.ico"
                 }
             ]
         },

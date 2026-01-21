@@ -1,36 +1,7 @@
 const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
-const Module = require('module');
-const originalRequire = Module.prototype.require;
-
-// Mock vscode module
-let mockConfig = {};
-Module.prototype.require = function (request) {
-    if (request === 'vscode') {
-        return {
-            window: {
-                createOutputChannel: () => ({ appendLine: () => { }, show: () => { } }),
-                createStatusBarItem: () => ({ show: () => { } }),
-                showInformationMessage: () => Promise.resolve(),
-                showWarningMessage: () => Promise.resolve(),
-                showErrorMessage: () => Promise.resolve(),
-            },
-            workspace: {
-                workspaceFolders: [{ uri: { fsPath: '/test/workspace' } }],
-                getConfiguration: (section) => ({
-                    get: (key) => mockConfig[key]
-                })
-            },
-            Uri: { file: (p) => ({ fsPath: p }) }
-        };
-    }
-    // Mock other internal modules to avoid loading them
-    if (['./lib/sidebar-provider', './lib/cdp-manager', './lib/relauncher', './lib/ralph-loop'].includes(request)) {
-        return {};
-    }
-    return originalRequire.apply(this, arguments);
-};
+const { setMockConfig } = require('./helpers/vscode-mock');
 
 // Mock fs module for mkdirSync and existsSync
 const originalExistsSync = fs.existsSync;
@@ -46,14 +17,11 @@ fs.mkdirSync = (path) => {
     return undefined;
 };
 
-const extension = require('../../extension');
-
-
 describe('State Configuration Test Suite', () => {
     let extension;
 
     beforeEach(() => {
-        mockConfig = {};
+        setMockConfig({});
         createdDirs = [];
 
         // Clear require cache for extension to ensure it uses our fresh vscode mock
@@ -62,10 +30,10 @@ describe('State Configuration Test Suite', () => {
     });
 
     after(() => {
-        Module.prototype.require = originalRequire;
         fs.existsSync = originalExistsSync;
         fs.mkdirSync = originalMkdirSync;
     });
+
 
     it('should use default path when config is missing', () => {
         const filePath = extension._private.getStateFilePath();
@@ -73,17 +41,23 @@ describe('State Configuration Test Suite', () => {
     });
 
     it('should use configured path', () => {
-        mockConfig = { stateFilePath: '.vscode/state.json' };
-        // Reload to pick up config? No, config is accessed dynamically. 
-        // But getStateFilePath accesses vscode.workspace.workspaceFolders, which is on the vscode object.
-        // Since we reloaded extension, it required vscode again, calling our mock.
+        setMockConfig({ stateFilePath: '.vscode/state.json' });
+
+        // Clear and reload extension to pick up new config
+        delete require.cache[require.resolve('../../extension')];
+        extension = require('../../extension');
 
         const filePath = extension._private.getStateFilePath();
         assert.strictEqual(filePath, path.join('/test/workspace', '.vscode', 'state.json'));
     });
 
     it('should create directory if it does not exist', () => {
-        mockConfig = { stateFilePath: 'custom/dir/state.json' };
+        setMockConfig({ stateFilePath: 'custom/dir/state.json' });
+
+        // Clear and reload extension to pick up new config
+        delete require.cache[require.resolve('../../extension')];
+        extension = require('../../extension');
+
         extension._private.getStateFilePath();
         assert.ok(createdDirs.includes(path.join('/test/workspace', 'custom/dir')));
     });

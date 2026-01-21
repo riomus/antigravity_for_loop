@@ -1080,121 +1080,151 @@ async function startLoop(options = {}) {
 
     if (!taskDescription) return;
 
-    // Step 2: Completion condition (Quick Pick)
-    const completionOptions = [
-        {
-            label: '$(check) Tests Pass',
-            description: detectedCmd
-                ? `${detectedCmd.lang}: ${detectedCmd.cmd}`
-                : 'No test command detected',
-            value: 'test',
-            command: detectedCmd?.cmd || null,
-            detail: detectedCmd ? `Detected ${detectedCmd.lang} project` : undefined
-        },
-        {
-            label: '$(package) Build Succeeds',
-            description: detectedCmd?.type?.includes('build')
-                ? detectedCmd.cmd
-                : 'Stop when build completes successfully',
-            value: 'build',
-            command: detectedCmd?.cmd || 'make'
-        },
-        {
-            label: '$(eye) AI Self-Judgment',
-            description: 'Stop when AI outputs "DONE"',
-            value: 'ai',
-            command: null
-        },
-        {
-            label: '$(comment-discussion) Prompt Check',
-            description: 'Run a verification prompt to check results',
-            value: 'prompt',
-            command: null
-        },
-        {
-            label: '$(terminal) Custom Command...',
-            description: 'Enter a custom validation command',
-            value: 'custom',
-            command: null
-        }
-    ];
+    // Check if we have all required options from sidebar (no-prompt mode)
+    const hasAllOptions = options.completionMode && options.maxIterations !== undefined;
 
-    const completionChoice = await vscode.window.showQuickPick(completionOptions, {
-        placeHolder: 'Select completion condition (when to stop the loop)',
-        ignoreFocusOut: true
-    });
-
-    if (!completionChoice) return;
-
-    let checkCommand = completionChoice.command;
-
-    // If custom, ask for command
-    if (completionChoice.value === 'custom') {
-        checkCommand = await vscode.window.showInputBox({
-            prompt: 'Enter validation command (exit 0 on success)',
-            placeHolder: 'e.g., npm test, cargo test, pytest, make test',
-            ignoreFocusOut: true
-        });
-        if (!checkCommand) return;
-    }
-
-    // If Prompt Check, ask for prompt and keyword
+    let completionMode;
+    let checkCommand = null;
     let checkPrompt = null;
     let successKeyword = 'PASS';
+    let maxIterations;
 
-    if (completionChoice.value === 'prompt') {
-        checkPrompt = await vscode.window.showInputBox({
-            prompt: 'Enter the verification prompt',
-            placeHolder: 'e.g., Check the file X. If it exists and has content Y, say PASS.',
-            ignoreFocusOut: true
-        });
-        if (!checkPrompt) return;
+    if (hasAllOptions) {
+        // No-prompt mode: use provided options
+        completionMode = options.completionMode;
+        maxIterations = options.maxIterations;
 
-        const keywordInput = await vscode.window.showInputBox({
-            prompt: 'Enter the success keyword to look for',
-            placeHolder: 'PASS',
-            value: 'PASS',
-            ignoreFocusOut: true
-        });
-        if (keywordInput) successKeyword = keywordInput;
-    }
+        // Handle test command
+        if (completionMode === 'test' || completionMode === 'build') {
+            checkCommand = options.testCommand || detectedCmd?.cmd;
 
-    // If test mode but no command detected, ask for it
-    if (completionChoice.value === 'test' && !checkCommand) {
-        checkCommand = await vscode.window.showInputBox({
-            prompt: 'No test command detected. Please enter manually',
-            placeHolder: 'e.g., npm test, cargo test, pytest, make test',
-            ignoreFocusOut: true
-        });
-        if (!checkCommand) return;
-    }
-
-    // Step 3: Max iterations (with sensible default)
-    const maxChoice = await vscode.window.showQuickPick([
-        { label: '5 iterations', value: '5', description: 'Quick try' },
-        { label: '10 iterations', value: '10', description: 'Recommended' },
-        { label: '20 iterations', value: '20', description: 'Complex task' },
-        { label: '50 iterations', value: '50', description: 'Difficult task' },
-        { label: 'Custom...', value: 'custom' }
-    ], {
-        placeHolder: 'Maximum iterations',
-        ignoreFocusOut: true
-    });
-
-    if (!maxChoice) return;
-
-    let maxIterations = parseInt(maxChoice.value);
-    if (maxChoice.value === 'custom') {
-        const customMax = await vscode.window.showInputBox({
-            prompt: 'Enter max iterations (1-100)',
-            value: '10',
-            validateInput: (v) => {
-                const n = parseInt(v);
-                return (isNaN(n) || n < 1 || n > 100) ? 'Please enter a number between 1-100' : null;
+            // If still no command, we need to prompt (fallback)
+            if (!checkCommand) {
+                checkCommand = await vscode.window.showInputBox({
+                    prompt: 'No test command detected. Please enter manually',
+                    placeHolder: 'e.g., npm test, cargo test, pytest, make test',
+                    ignoreFocusOut: true
+                });
+                if (!checkCommand) return;
             }
+        }
+    } else {
+        // Interactive mode: show prompts (for command palette usage)
+
+        // Step 2: Completion condition (Quick Pick)
+        const completionOptions = [
+            {
+                label: '$(check) Tests Pass',
+                description: detectedCmd
+                    ? `${detectedCmd.lang}: ${detectedCmd.cmd}`
+                    : 'No test command detected',
+                value: 'test',
+                command: detectedCmd?.cmd || null,
+                detail: detectedCmd ? `Detected ${detectedCmd.lang} project` : undefined
+            },
+            {
+                label: '$(package) Build Succeeds',
+                description: detectedCmd?.type?.includes('build')
+                    ? detectedCmd.cmd
+                    : 'Stop when build completes successfully',
+                value: 'build',
+                command: detectedCmd?.cmd || 'make'
+            },
+            {
+                label: '$(eye) AI Self-Judgment',
+                description: 'Stop when AI outputs "DONE"',
+                value: 'ai',
+                command: null
+            },
+            {
+                label: '$(comment-discussion) Prompt Check',
+                description: 'Run a verification prompt to check results',
+                value: 'prompt',
+                command: null
+            },
+            {
+                label: '$(terminal) Custom Command...',
+                description: 'Enter a custom validation command',
+                value: 'custom',
+                command: null
+            }
+        ];
+
+        const completionChoice = await vscode.window.showQuickPick(completionOptions, {
+            placeHolder: 'Select completion condition (when to stop the loop)',
+            ignoreFocusOut: true
         });
-        if (!customMax) return;
-        maxIterations = parseInt(customMax);
+
+        if (!completionChoice) return;
+
+        completionMode = completionChoice.value;
+        checkCommand = completionChoice.command;
+
+        // If custom, ask for command
+        if (completionMode === 'custom') {
+            checkCommand = await vscode.window.showInputBox({
+                prompt: 'Enter validation command (exit 0 on success)',
+                placeHolder: 'e.g., npm test, cargo test, pytest, make test',
+                ignoreFocusOut: true
+            });
+            if (!checkCommand) return;
+        }
+
+        // If Prompt Check, ask for prompt and keyword
+        if (completionMode === 'prompt') {
+            checkPrompt = await vscode.window.showInputBox({
+                prompt: 'Enter the verification prompt',
+                placeHolder: 'e.g., Check the file X. If it exists and has content Y, say PASS.',
+                ignoreFocusOut: true
+            });
+            if (!checkPrompt) return;
+
+            const keywordInput = await vscode.window.showInputBox({
+                prompt: 'Enter the success keyword to look for',
+                placeHolder: 'PASS',
+                value: 'PASS',
+                ignoreFocusOut: true
+            });
+            if (keywordInput) successKeyword = keywordInput;
+        }
+
+        // If test mode but no command detected, ask for it
+        if (completionMode === 'test' && !checkCommand) {
+            checkCommand = await vscode.window.showInputBox({
+                prompt: 'No test command detected. Please enter manually',
+                placeHolder: 'e.g., npm test, cargo test, pytest, make test',
+                ignoreFocusOut: true
+            });
+            if (!checkCommand) return;
+        }
+
+        // Step 3: Max iterations (with sensible default)
+        const maxChoice = await vscode.window.showQuickPick([
+            { label: '5 iterations', value: '5', description: 'Quick try' },
+            { label: '10 iterations', value: '10', description: 'Recommended' },
+            { label: '20 iterations', value: '20', description: 'Complex task' },
+            { label: '50 iterations', value: '50', description: 'Difficult task' },
+            { label: 'Custom...', value: 'custom' }
+        ], {
+            placeHolder: 'Maximum iterations',
+            ignoreFocusOut: true
+        });
+
+        if (!maxChoice) return;
+
+        maxIterations = parseInt(maxChoice.value);
+        if (maxChoice.value === 'custom') {
+            const customMax = await vscode.window.showInputBox({
+                prompt: 'Enter max iterations (1-100)',
+                value: '10',
+                validateInput: (v) => {
+                    const n = parseInt(v);
+                    return (isNaN(n) || n < 1 || n > 100) ? 'Please enter a number between 1-100' : null;
+                }
+            });
+            if (!customMax) return;
+            maxIterations = parseInt(customMax);
+        }
     }
 
     // Show output channel

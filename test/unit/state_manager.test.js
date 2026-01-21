@@ -2,18 +2,17 @@ const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
 const sinon = require('sinon');
-const vscode = require('vscode');
+const { setMockConfig } = require('./helpers/vscode-mock');
 
 // Mock helpers
-const originalVscode = vscode;
 const workspaceRoot = '/test/workspace';
 const defaultStatePath = path.join(workspaceRoot, '.antigravity', 'for-loop-state.json');
+
 
 describe('StateManager', () => {
     let StateManager;
     let stateManager;
     let outputChannelMock;
-    let fsMock;
 
     before(() => {
         // Load the class under test
@@ -21,15 +20,8 @@ describe('StateManager', () => {
     });
 
     beforeEach(() => {
-        // Mock vscode module
-        const getConfigurationMock = sinon.stub();
-        getConfigurationMock.withArgs('antigravity').returns({
-            get: sinon.stub().withArgs('stateFilePath').returns(null) // Default null
-        });
-
-        // Setup vscode mock
-        sinon.stub(vscode.workspace, 'workspaceFolders').value([{ uri: { fsPath: workspaceRoot } }]);
-        sinon.stub(vscode.workspace, 'getConfiguration').callsFake(getConfigurationMock);
+        // Reset mock config to default (no custom state file path)
+        setMockConfig({});
 
         // Mock output channel
         outputChannelMock = {
@@ -37,14 +29,6 @@ describe('StateManager', () => {
         };
 
         stateManager = new StateManager(outputChannelMock);
-
-        // Mock fs
-        fsMock = {
-            existsSync: sinon.stub(),
-            mkdirSync: sinon.stub(),
-            writeFileSync: sinon.stub(),
-            readFileSync: sinon.stub()
-        };
     });
 
     afterEach(() => {
@@ -74,11 +58,7 @@ describe('StateManager', () => {
 
         it('should return configured relative path', () => {
             // Update mock config
-            vscode.workspace.getConfiguration.restore();
-            const configMock = {
-                get: sinon.stub().withArgs('stateFilePath').returns('custom/path.json')
-            };
-            sinon.stub(vscode.workspace, 'getConfiguration').returns(configMock);
+            setMockConfig({ stateFilePath: 'custom/path.json' });
             sinon.stub(fs, 'existsSync').returns(true);
 
             const result = stateManager.getStateFilePath();
@@ -89,11 +69,7 @@ describe('StateManager', () => {
             const absolutePath = '/absolute/path/to/state.json';
 
             // Update mock config
-            vscode.workspace.getConfiguration.restore();
-            const configMock = {
-                get: sinon.stub().withArgs('stateFilePath').returns(absolutePath)
-            };
-            sinon.stub(vscode.workspace, 'getConfiguration').returns(configMock);
+            setMockConfig({ stateFilePath: absolutePath });
             sinon.stub(fs, 'existsSync').returns(true);
 
             const result = stateManager.getStateFilePath();
@@ -154,4 +130,6 @@ describe('StateManager', () => {
             assert.ok(outputChannelMock.appendLine.calledWithMatch(/Failed to read state/));
         });
     });
+
+
 });
