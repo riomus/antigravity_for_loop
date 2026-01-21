@@ -19,7 +19,10 @@ Module.prototype.require = function (request) {
                 showInformationMessage: () => Promise.resolve()
             },
             commands: { registerCommand: () => ({ dispose: () => { } }) },
-            workspace: { workspaceFolders: [{ uri: { fsPath: '/tmp' } }] },
+            workspace: {
+                workspaceFolders: [{ uri: { fsPath: '/tmp' } }],
+                getConfiguration: () => ({ get: () => null })
+            },
             StatusBarAlignment: { Right: 1 },
             ThemeColor: class { },
             Uri: { file: (p) => ({ fsPath: p }) }

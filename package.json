@@ -120,6 +120,36 @@
             ]
         }
     },
+    "configuration": {
+        "title": "Antigravity For Loop",
+        "properties": {
+            "antigravity.stateFilePath": {
+                "type": "string",
+                "default": ".antigravity/for-loop-state.json",
+                "description": "Path to the state file relative to the workspace root."
+            },
+            "antigravity.preStartPrompt": {
+                "type": "string",
+                "default": null,
+                "description": "Prompt to run before the loop starts (e.g., set up environment)."
+            },
+            "antigravity.preIterationPrompt": {
+                "type": "string",
+                "default": null,
+                "description": "Prompt to run before each iteration (e.g., clear logs)."
+            },
+            "antigravity.postIterationPrompt": {
+                "type": "string",
+                "default": null,
+                "description": "Prompt to run after each iteration (e.g., analyze logs)."
+            },
+            "antigravity.preStopPrompt": {
+                "type": "string",
+                "default": null,
+                "description": "Prompt to run when the loop stops (success or failure)."
+            }
+        }
+    },
     "scripts": {
         "test:shell": "shellspec --shell bash",
         "test:unit": "mocha test/unit/**/*.test.js --timeout 10000",

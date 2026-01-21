@@ -6,26 +6,10 @@ Mark task as done after doing it
 
 Add status and infos to the file- to sum up what was done and what is left to do
 
-[x]  Create side panel with all options
-    [x]  create basic side panel
-    [x]  add possibility to customize all the prompts
-    [x]  add CDP status inf
-    [x]  add continuation enforcer status info
-    [x]  add possibility to enable/disable continuation enforcer
-    [x]  add info on the loop - status - internals etc 
-    [x]  add possibility to stop the loop
-    [x]  add possibility to pause the loop 
-    [x] show progress bar of the loop with current iteration and max iterations + logs
-    [x] add possibility to change all prompts (Ralph Loop templates)
-        [x] Update RalphLoop.js to support prompt templates
-        [x] Update SidebarProvider.js to add prompt template editor
-        [x] Update extension.js to persist and pass prompt templates
-    [x] Fix Loop UI logic
-        [x] Hide Start button when running
-        [x] Disable/Hide Pause/Resume when not running
-        [x] Color progress bar based on status (Red/Green)
-    [x] Add Model Quota Limit Handling
-        [x] Add detection for "Model quota limit exceeded" error
-        [x] Parse resumption date from error message
-        [x] Implement wait loop in RalphLoop
-        [x] Add configuration UI in Sidebar
+[x]  Advanced Ralph Loops for antigravity
+    [x] Loop should use configurable file to save infos on the state of the execution
+    [x] I want to be able to configure a prompt (configurable, templetable) for pre-start - it should run agent before the loop starts and it shuold update state file
+    [x] I want to be able to configure a prompt (configurable, templetable) for pre-iteration - it should run agent before each iteration and it shuold update state file
+    [x] I want to be able to configure a prompt (configurable, templetable) for post-iteration - it should run agent after each iteration and it shuold update state file
+    [x] I want to be able to configure a prompt (configurable, templetable) for pre-stop - it should run agent after the loop stops and it shuold update state file
+    [x] Loop starting prompt should be entered in side panel and then loop should be started - with all features enables - default prompt should be "Read tasks.md, pick next available task, do it and update tasks.md with result"

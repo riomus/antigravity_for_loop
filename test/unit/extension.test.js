@@ -22,7 +22,8 @@ Module.prototype.require = function (request) {
                 executeCommand: () => Promise.resolve()
             },
             workspace: {
-                workspaceFolders: []
+                workspaceFolders: [],
+                getConfiguration: () => ({ get: () => null })
             },
             env: {
                 clipboard: { writeText: () => Promise.resolve() },

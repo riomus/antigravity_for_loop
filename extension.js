@@ -15,6 +15,7 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 const SidebarProvider = require('./lib/sidebar-provider');
+const StateManager = require('./lib/state-manager');
 // Modules will be loaded dynamically in activate() to catch initialization errors
 
 // Global state
@@ -32,8 +33,9 @@ let cdpManager = null;
 let relauncher = null;
 let CDPManager = null;
 let Relauncher = null;
-let RalphLoop = null;
+
 let sidebarProvider = null;
+let stateManager = null;
 
 
 // ... (existing code)
@@ -43,6 +45,8 @@ let sidebarProvider = null;
  */
 function updateSidebarState() {
     if (!sidebarProvider) return;
+
+    const config = vscode.workspace.getConfiguration('antigravity');
 
     const state = readState();
     const cdpEnabled = relauncher ? relauncher.isCDPEnabled() : false;
@@ -76,13 +80,15 @@ function updateSidebarState() {
         customInstructions: state ? state.custom_instructions : (currentState?.custom_instructions),
         promptTemplate: (state && state.prompt_template) || (currentState && currentState.prompt_template) || (RalphLoop ? RalphLoop.DEFAULT_PROMPT_TEMPLATE : ''),
         lastError: state ? state.last_error : (currentState?.last_error),
-        lastError: state ? state.last_error : (currentState?.last_error),
-        message: state ? state.message : (currentState?.message),
         message: state ? state.message : (currentState?.message),
         quotaCheckEnabled: state ? state.quota_check_enabled : (currentState?.quota_check_enabled !== false),
         quotaCheckInterval: state ? state.quota_check_interval : (currentState?.quota_check_interval || 60000),
         quotaDefaultWait: state ? state.quota_default_wait : (currentState?.quota_default_wait || 30 * 60000),
-        logs: state ? state.logs : (currentState?.logs)
+        logs: state ? state.logs : (currentState?.logs),
+        preStartPrompt: state ? state.pre_start_prompt : (config.get('preStartPrompt') || null),
+        preIterationPrompt: state ? state.pre_iteration_prompt : (config.get('preIterationPrompt') || null),
+        postIterationPrompt: state ? state.post_iteration_prompt : (config.get('postIterationPrompt') || null),
+        preStopPrompt: state ? state.pre_stop_prompt : (config.get('preStopPrompt') || null),
     });
 }
 
@@ -147,14 +153,48 @@ Continue fixing the code now. Do not ask for permission.`;
  */
 function getStateFilePath() {
     const workspaceFolders = vscode.workspace.workspaceFolders;
+    console.log('DEBUG: workspaceFolders', workspaceFolders);
     if (!workspaceFolders || workspaceFolders.length === 0) {
         return null;
     }
-    const dotDir = path.join(workspaceFolders[0].uri.fsPath, '.antigravity');
-    if (!fs.existsSync(dotDir)) {
-        fs.mkdirSync(dotDir, { recursive: true });
+
+    const config = vscode.workspace.getConfiguration('antigravity');
+    const relativePath = config.get('stateFilePath') || '.antigravity/for-loop-state.json';
+    const fullPath = path.join(workspaceFolders[0].uri.fsPath, relativePath);
+    const dir = path.dirname(fullPath);
+
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
     }
-    return path.join(dotDir, 'for-loop-state.json');
+    return fullPath;
+}
+
+function updatePreIterationPrompt(prompt) {
+    const state = readState() || {};
+    state.pre_iteration_prompt = prompt;
+    saveState(state);
+    vscode.window.setStatusBarMessage('Pre-Iteration prompt updated', 3000);
+}
+
+function updatePreStartPrompt(prompt) {
+    const state = readState() || {};
+    state.pre_start_prompt = prompt;
+    saveState(state);
+    vscode.window.setStatusBarMessage('Pre-Start prompt updated', 3000);
+}
+
+function updatePostIterationPrompt(prompt) {
+    const state = readState() || {};
+    state.post_iteration_prompt = prompt;
+    saveState(state);
+    vscode.window.setStatusBarMessage('Post-Iteration prompt updated', 3000);
+}
+
+function updatePreStopPrompt(prompt) {
+    const state = readState() || {};
+    state.pre_stop_prompt = prompt;
+    saveState(state);
+    vscode.window.setStatusBarMessage('Pre-Stop prompt updated', 3000);
 }
 
 /**
@@ -174,14 +214,13 @@ function resetStaleState() {
  * Save state to file
  */
 function saveState(state) {
-    const stateFile = getStateFilePath();
-    if (!stateFile) return;
-    try {
-        fs.writeFileSync(stateFile, JSON.stringify(state, null, 2));
-        currentState = state; // Update global in-memory state
+    if (!stateManager) {
+        stateManager = new StateManager(outputChannel);
+    }
+    const savedState = stateManager.saveState(state);
+    if (savedState) {
+        currentState = savedState; // Update global in-memory state
         updateSidebarState(); // Update UI
-    } catch (error) {
-        outputChannel.appendLine(`[Error] Failed to save state: ${error.message}`);
     }
 }
 
@@ -189,17 +228,11 @@ function saveState(state) {
  * Read the current loop state
  */
 function readState() {
-    const stateFile = getStateFilePath();
-    if (!stateFile || !fs.existsSync(stateFile)) {
-        return null;
+    if (!stateManager) {
+        // Fallback if accessed before init
+        stateManager = new StateManager(outputChannel);
     }
-    try {
-        const content = fs.readFileSync(stateFile, 'utf8');
-        return JSON.parse(content);
-    } catch (error) {
-        outputChannel.appendLine(`[Error] Failed to read state: ${error.message}`);
-        return null;
-    }
+    return stateManager.readState();
 }
 
 /**
@@ -1183,6 +1216,11 @@ async function startLoop(options = {}) {
         quotaCheckInterval: options.quotaCheckInterval || 60000,
         quotaDefaultWait: options.quotaDefaultWait || 30 * 60000,
 
+        // Pre/Post Prompts
+        preStartPrompt: vscode.workspace.getConfiguration('antigravity').get('preStartPrompt'),
+        preIterationPrompt: vscode.workspace.getConfiguration('antigravity').get('preIterationPrompt'),
+        postIterationPrompt: vscode.workspace.getConfiguration('antigravity').get('postIterationPrompt'),
+
         customInstructions: currentState?.custom_instructions, // Pass custom prompt
         promptTemplate: currentState?.prompt_template, // Pass custom template
         onProgress: (progress) => {
@@ -1628,6 +1666,11 @@ function activate(context) {
             { id: 'antigravity-for-loop.refreshSidebar', handler: updateSidebarState },
             { id: 'antigravity-for-loop.updatePrompt', handler: updateCustomPrompt },
             { id: 'antigravity-for-loop.updatePromptTemplate', handler: updatePromptTemplate },
+            { id: 'antigravity-for-loop.updatePromptTemplate', handler: updatePromptTemplate },
+            { id: 'antigravity-for-loop.updatePreIterationPrompt', handler: updatePreIterationPrompt },
+            { id: 'antigravity-for-loop.updatePreStartPrompt', handler: updatePreStartPrompt },
+            { id: 'antigravity-for-loop.updatePostIterationPrompt', handler: updatePostIterationPrompt },
+            { id: 'antigravity-for-loop.updatePreStopPrompt', handler: updatePreStopPrompt },
             { id: 'antigravity-for-loop.resetPromptTemplate', handler: resetPromptTemplate }
         ];
 
@@ -1685,5 +1728,8 @@ function deactivate() {
 
 module.exports = {
     activate,
-    deactivate
+    deactivate,
+    _private: {
+        getStateFilePath
+    }
 };
